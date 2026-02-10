@@ -164,7 +164,7 @@
 
 .homeSectionsContainer {
   position: relative;
-  margin-top: 65vh;
+  top: 65vh;
   z-index: 6;
 }
 
