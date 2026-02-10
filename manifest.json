@@ -9,6 +9,14 @@
     "imageUrl": "https://raw.githubusercontent.com/CodeDevMLH/jellyfin-plugin-media-bar-enhanced/refs/heads/main/logo.png",
     "versions": [
       {
+        "version": "1.6.0.0",
+        "changelog": "- add local trailer support on trailer button\n- custom media ID functionality extended with manual Jellyfin ID override support\nfix: iOS/MacOS playback issue now?",
+        "targetAbi": "10.11.0.0",
+        "sourceUrl": "https://github.com/CodeDevMLH/jellyfin-plugin-media-bar-enhanced/releases/download/v1.5.1.2/Jellyfin.Plugin.MediaBarEnhanced.zip",
+        "checksum": "",
+        "timestamp": ""
+      },
+      {
         "version": "1.5.1.2",
         "changelog": "fix layout issue",
         "targetAbi": "10.11.0.0",
