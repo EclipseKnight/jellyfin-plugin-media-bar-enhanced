@@ -995,8 +995,3 @@
 .dots-container .slide-counter {
   margin: 0;
 }
-
-/* Fix scrolling issue in TV mode - preserve space for slideshow */
-.layout-tv html, .layout-tv body {
-  scroll-padding-top: 65vh;
-}
