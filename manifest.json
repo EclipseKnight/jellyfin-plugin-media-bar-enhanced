@@ -12,9 +12,9 @@
         "version": "1.5.1.2",
         "changelog": "fix layout issue",
         "targetAbi": "10.11.0.0",
-        "sourceUrl": "https://github.com/CodeDevMLH/jellyfin-plugin-media-bar-enhanced/releases/download/v1.5.1.1/Jellyfin.Plugin.MediaBarEnhanced.zip",
-        "checksum": "7ce1623e88a4ea2c1c4a5450b03ca0a1",
-        "timestamp": "2026-02-10T17:05:57Z"
+        "sourceUrl": "https://github.com/CodeDevMLH/jellyfin-plugin-media-bar-enhanced/releases/download/v1.5.1.2/Jellyfin.Plugin.MediaBarEnhanced.zip",
+        "checksum": "0c1fe94cc32f1a228c8ed82435d36743",
+        "timestamp": "2026-02-10T20:23:23Z"
       },
       {
         "version": "1.5.1.0",
