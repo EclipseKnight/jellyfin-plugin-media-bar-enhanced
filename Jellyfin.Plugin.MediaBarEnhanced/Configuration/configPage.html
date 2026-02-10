@@ -123,8 +123,14 @@
                             <div class="fieldDescription" id="customMediaIdsDesc">Enter the IDs of the items you want to show in the slideshow.
                                 You can separate them by new line or comma.
                                 <br><br>
-                                <b>Manual Trailer Override:</b> You can specify a YouTube URL for an item by adding it in
-                                brackets: <br> <code>e.g. ID DESCRIPTION [https://youtu.be/...]</code> or <code>ID [https://youtu.be/...] DESCRIPTION</code>
+                                <b>Manual Trailer/Video Override:</b> You can specify a YouTube URL <b>OR</b> a Jellyfin Item ID (e.g. for a Theme Video) for an item by adding it in
+                                brackets: <br> <code>e.g. ID DESCRIPTION [https://youtu.be/...]</code> or <code>ID [Method] DESCRIPTION</code>.
+                                <br>
+                                Methods:
+                                <ul>
+                                    <li><b>YouTube URL:</b> Play a remote trailer from YouTube.</li>
+                                    <li><b>Jellyfin Item ID (GUID):</b> Play the video of another library item (e.g. a Theme Video or Backdrop Video) using the native player.</li>
+                                </ul>
                                 <br><br>
                                 You can also add a description after the ID using any separator like space, pipe
                                 (|) or dash (-): <br>e.g. <code>ID DESCRIPTION</code> or <code>ID | DESCRIPTION</code>
@@ -182,8 +188,7 @@
                         </div>
                         <div class="selectContainer">
                             <label class="selectLabel" for="PreferredVideoQuality">Preferred YouTube Quality</label>
-                            <select is="emby-select" id="PreferredVideoQuality" name="PreferredVideoQuality"
-                                class="emby-select-withcolor emby-select">
+                            <select is="emby-select" id="PreferredVideoQuality" name="PreferredVideoQuality" class="selectLayout emby-select-withcolor emby-select">
                                 <option value="Auto">Auto (Smart)</option>
                                 <option value="Maximum">Maximum (4K+)</option>
                                 <option value="1080p">1080p</option>
@@ -285,7 +290,7 @@
                         <h2 class="sectionTitle">Content Sorting</h2>
                         <div class="selectContainer">
                             <label class="selectLabel" for="SortBy">Sort By</label>
-                            <select is="emby-select" id="SortBy" name="SortBy" class="emby-select-withcolor emby-select">
+                            <select is="emby-select" id="SortBy" name="SortBy" class="selectLayout emby-select-withcolor emby-select">
                                 <option value="Random">Random</option>
                                 <option value="Original">Original (Custom List Order)</option>
                                 <option value="PremiereDate">Premiere Date</option>
@@ -299,7 +304,7 @@
                         </div>
                         <div class="selectContainer">
                             <label class="selectLabel" for="SortOrder">Sort Order</label>
-                            <select is="emby-select" id="SortOrder" name="SortOrder" class="emby-select-withcolor emby-select">
+                            <select is="emby-select" id="SortOrder" name="SortOrder" class="selectLayout emby-select-withcolor emby-select">
                                 <option value="Ascending">Ascending</option>
                                 <option value="Descending">Descending</option>
                             </select>
