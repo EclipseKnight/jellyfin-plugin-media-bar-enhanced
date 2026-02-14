@@ -20,6 +20,8 @@ This plugin is a fork and enhancement of the original [Media Bar by MakD](https:
   - [Configuration](#configuration)
     - [General Settings](#general-settings)
     - [Custom Content](#custom-content)
+    - [Content Sorting](#content-sorting)
+    - [Content Limits](#content-limits)
     - [Advanced Settings](#advanced-settings)
   - [Build The Plugin By Yourself](#build-the-plugin-by-yourself)
   - [Troubleshooting](#troubleshooting)
@@ -108,6 +110,7 @@ This plugin builds upon the original Media Bar with new capabilities and improve
 *   **Direct Play**: Click "Play" to start watching immediately
 *   **Details View**: Click "Info" to jump to the item's detail page
 *   **Add To Favorites**: Click the heart to add the item to your favorites
+*   **Customize**: Change the plugins behavior through the Jellyfin admin panel
 
 ## Installation
 
@@ -159,21 +162,48 @@ Configure the plugin via **Dashboard** > **Plugins** > **Media Bar Enhanced**.
 Define exactly what shows up in your bar.
 
 *   **Enable Custom Media IDs**: Restrict the slideshow to a specific list of IDs.
-    *   **Manual Trailer Override**: Add `[YouTube_URL]` after an ID to force a specific trailer.
+    *   **Manual Trailer Override**: Add `[YouTube_URL]` or `[Jellyfin_ID]` after an ID to force a specific trailer/video.
     *   Example ID: `a1b2c3d4e5... [https://www.youtube.com/watch?v=VIDEO_ID]`
+    *   Example ID: `z1b2c3d4e5... [Jellyfin_ID]`
+    *   **Example Mixed List**:
+        ```
+        a1b2c3d4e5f6...                         <-- Plays local item video
+        6bdu812812hd... [https://youtu.be/...]  <-- Item metadata + Custom YouTube Trailer
+        12h44h124sf7... [hdc78127z4ff...]       <-- Item metadata + Custom Jellyfin Trailer/Video etc.
+        ```
     *   Example Collection Name: `Halloween Collection [https://...] | My Description` (Note: Use `|` to separate description from name if using a name instead of an ID)
+*   **Apply Limits to Custom IDs**: If enabled, the "Content Limits" (see below) will also apply to your Custom Media IDs list. By default, custom lists show all listed items regardless of limits.
 *   **Enable Seasonal Content Mode**: Advanced date-based scheduling.
-    *   Format: `DD.MM-DD.MM | Name | ID1, ID2, ID3`
-    *   Example: `20.10-31.10 | Halloween | <ID_OF_HALLOWEEN_COLLECTION>`
-    *   If the current date matches a range, those IDs are used. Otherwise, it defaults to standard behavior or the Custom Media IDs list.
+    *   **GUI Configuration**: You can easily add "Seasons" via the **Add Season** button.
+    *   **Active Period**: Select the Start and End Day/Month for each season.
+    *   **Media IDs**: Enter the Comma-separated list of IDs (Movies, Series, Collections) for that season.
+    *   **Priority**: If the current date matches a defined season, those IDs are used. If multiple seasons overlap, the first matching one is used. If no season matches, it falls back to the Default Custom Media IDs.
 
 **How to get IDs:**
 Check the URL of an item in the web interface:
 `.../web/#/details?id=YOUR_ITEM_ID_HERE&...`
 
+### Content Sorting
+Customize the order of slides in the Media Bar.
+
+*   **Sort By**: Choose criteria like *Random*, *Premiere Date*, *Production Year*, *Critic Rating*, *Community Rating*, *Name*, or *Runtime*.
+*   **Sort Order**: Ascending or Descending.
+*   **Note**: Sorting applies to both server-fetched content AND Custom Media IDs. Select **Original** to preserve the exact order of your Custom Media IDs list.
+
+### Content Limits
+Fine-tune performance by limiting the number of items fetched from the server.
+
+*   **Total Max Items**: Maximum total items to fetch (combined).
+*   **Max Movies**: Maximum movies to include (for random selection).
+*   **Max Tv Shows**: Maximum TV shows to include (for random selection).
+*   **Preload Count**: Number of slides to preload for smooth transitions.
+    *   *Intelligent Preloading*: The plugin uses a safe preloading strategy that respects this count but handles small lists gracefully to avoid playback issues.
+*   **Max Pagination Dots**: Maximum number of dots to show. If exceeded, it switches to a counter (e.g., 1/20).
+
 ### Advanced Settings
 *   **Slide Animations**: Enable/disable the "Zoom In" effect.
 *   **Use SponsorBlock**: Skips non-content segments in YouTube trailers (if the data exists).
+*   **Preferred YouTube Quality**: Select your preferred resolution (*Auto*, *Maximum*, *1080p*, *720p*).
 *   **Start Muted**: Videos start without sound (user can unmute).
 *   **Full Width Video**: Stretches video to cover the entire width (good for desktop, crop on mobile).
 *   **Enable Loading Screen**: Enable/disable the loading indicator while the bar initializes.
