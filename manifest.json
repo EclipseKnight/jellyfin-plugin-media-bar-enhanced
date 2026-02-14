@@ -12,9 +12,9 @@
         "version": "1.6.1.0",
         "changelog": "- feat: add seasonal UI logic\n- add option to also set the limits for custom ids\n- fix tv mode scroll issue\n- smaller fixes and improvements",
         "targetAbi": "10.11.0.0",
-        "sourceUrl": "https://github.com/CodeDevMLH/jellyfin-plugin-media-bar-enhanced/releases/download/v1.6.0.0/Jellyfin.Plugin.MediaBarEnhanced.zip",
-        "checksum": "e7db331fc9eaf800cbbd7bbcfdece12f",
-        "timestamp": "2026-02-10T21:54:36Z"
+        "sourceUrl": "https://github.com/CodeDevMLH/jellyfin-plugin-media-bar-enhanced/releases/download/v1.6.1.0/Jellyfin.Plugin.MediaBarEnhanced.zip",
+        "checksum": "8d7fa5243e17474607c9071655fa8b1f",
+        "timestamp": "2026-02-14T16:18:04Z"
       },
       {
         "version": "1.6.0.0",
