@@ -2,7 +2,7 @@
 
 Media Bar Enhanced is a plugin for Jellyfin that introduces a customizable and interactive media bar to your dashboard view on Jellyfin web.
 
-This plugin is a fork and enhancement of the original [Media Bar by MakD](https://github.com/MakD/Jellyfin-Media-Bar), but can be installed as plugin for easier installation and management/configuration.
+This plugin is a fork and enhancement of the original [Media Bar by MakD](https://github.com/MakD/Jellyfin-Media-Bar) and my previous work on [Jellyfin-Featured-Content-Bar](https://github.com/CodeDevMLH/Jellyfin-Featured-Content-Bar), but can be installed as plugin for easier installation and management/configuration.
 
 ![logo](https://raw.githubusercontent.com/CodeDevMLH/jellyfin-plugin-media-bar-enhanced/main/logo.png)
 
