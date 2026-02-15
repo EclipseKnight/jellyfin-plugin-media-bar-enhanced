@@ -22,6 +22,9 @@ namespace Jellyfin.Plugin.MediaBarEnhanced.Configuration
         public bool EnableVideoBackdrop { get; set; } = true;
         public bool UseSponsorBlock { get; set; } = true;
         public bool PreferLocalTrailers { get; set; } = false;
+        public bool RandomizeLocalTrailers { get; set; } = false;
+        public bool PreferLocalBackdrops { get; set; } = false;
+        public bool RandomizeThemeVideos { get; set; } = false;
         public bool WaitForTrailerToEnd { get; set; } = true;
         public bool StartMuted { get; set; } = true;
         public bool FullWidthVideo { get; set; } = true;
@@ -38,6 +41,7 @@ namespace Jellyfin.Plugin.MediaBarEnhanced.Configuration
         public bool IsEnabled { get; set; } = true;
         public bool EnableClientSideSettings { get; set; } = false;
         public bool ApplyLimitsToCustomIds { get; set; } = false;
+        public bool IncludeWatchedContent { get; set; } = false;
         public string SortBy { get; set; } = "Random";
         public string SortOrder { get; set; } = "Ascending";
     }

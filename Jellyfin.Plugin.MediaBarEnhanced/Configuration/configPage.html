@@ -65,6 +65,14 @@
                             </label>
                             <div class="fieldDescription">If enabled, local trailers will be preferred over remote (YouTube) trailers.</div>
                         </div>
+                        <div class="checkboxContainer checkboxContainer-withDescription" id="PreferLocalBackdropsContainer">
+                            <label>
+                                <input is="emby-checkbox" type="checkbox" id="PreferLocalBackdrops"
+                                    name="PreferLocalBackdrops" />
+                                <span>Prefer Local Backdrops / Theme Videos</span>
+                            </label>
+                            <div class="fieldDescription">If enabled, local backdrop videos (Theme Videos) will be preferred over trailers.</div>
+                        </div>
                         <div class="checkboxContainer checkboxContainer-withDescription">
                             <label>
                                 <input is="emby-checkbox" type="checkbox" id="WaitForTrailerToEnd"
@@ -186,6 +194,22 @@
                             </label>
                             <div class="fieldDescription">If enabled, users will see a media bar icon in the header to
                                 override settings (like disabling the bar or trailer backdrops) locally on their device.</div>
+                        </div>
+                        <div class="checkboxContainer checkboxContainer-withDescription">
+                            <label>
+                                <input is="emby-checkbox" type="checkbox" id="RandomizeThemeVideos"
+                                    name="RandomizeThemeVideos" />
+                                <span>Randomize Backdrop Video</span>
+                            </label>
+                            <div class="fieldDescription">If enabled, a random video from the backdrops/theme videos will be selected instead of the first one (if multiple exist).</div>
+                        </div>
+                        <div class="checkboxContainer checkboxContainer-withDescription">
+                            <label>
+                                <input is="emby-checkbox" type="checkbox" id="RandomizeLocalTrailers"
+                                    name="RandomizeLocalTrailers" />
+                                <span>Randomize Local Trailer</span>
+                            </label>
+                            <div class="fieldDescription">If enabled, a random local trailer will be selected instead of the first one (if multiple exist).</div>
                         </div>
                         <div class="checkboxContainer checkboxContainer-withDescription">
                             <label>
@@ -361,6 +385,14 @@
                             <input is="emby-input" type="number" id="MaxPlotLength" name="MaxPlotLength" />
                             <div class="fieldDescription">Maximum characters for the plot summary.</div>
                         </div>
+                        <div class="checkboxContainer checkboxContainer-withDescription">
+                            <label>
+                                <input is="emby-checkbox" type="checkbox" id="IncludeWatchedContent"
+                                    name="IncludeWatchedContent" />
+                                <span>Include Watched Content</span>
+                            </label>
+                            <div class="fieldDescription">If enabled, watched content will be included in the random selection results.</div>
+                        </div>
                     </div>
 
                     <div
@@ -419,7 +451,9 @@
                             'ShowTrailerButton', 'AlwaysShowArrows', 'EnableKeyboardControls',
                             'EnableCustomMediaIds', 'CustomMediaIds', 'EnableLoadingScreen',
                             'EnableSeasonalContent', 'EnableClientSideSettings', 'SortBy', 'SortOrder',
-                            'PreferLocalTrailers', 'ApplyLimitsToCustomIds', 'SeasonalSections'
+                            'PreferLocalTrailers', 'ApplyLimitsToCustomIds', 'SeasonalSections',
+                            'PreferLocalBackdrops', 'RandomizeThemeVideos', 'RandomizeLocalTrailers',
+                            'IncludeWatchedContent'
                         ];
 
                         keys.forEach(function (key) {
@@ -470,12 +504,15 @@
                         // Handle Prefer Local Trailers visibility
                         var enableVideoBackdropCheckbox = page.querySelector('#EnableVideoBackdrop');
                         var preferLocalContainer = page.querySelector('#PreferLocalTrailersContainer');
+                        var preferLocalBackdropsContainer = page.querySelector('#PreferLocalBackdropsContainer');
 
                         function updatePreferLocalVisibility() {
                             if (enableVideoBackdropCheckbox && enableVideoBackdropCheckbox.checked) {
                                 if (preferLocalContainer) preferLocalContainer.style.display = 'block';
+                                if (preferLocalBackdropsContainer) preferLocalBackdropsContainer.style.display = 'block';
                             } else {
                                 if (preferLocalContainer) preferLocalContainer.style.display = 'none';
+                                if (preferLocalBackdropsContainer) preferLocalBackdropsContainer.style.display = 'none';
                             }
                         }
 
@@ -505,7 +542,9 @@
                         'ShowTrailerButton', 'AlwaysShowArrows', 'EnableKeyboardControls',
                         'EnableCustomMediaIds', 'CustomMediaIds', 'EnableLoadingScreen',
                         'EnableSeasonalContent', 'EnableClientSideSettings', 'SortBy', 'SortOrder',
-                        'PreferLocalTrailers', 'ApplyLimitsToCustomIds', 'SeasonalSections'
+                        'PreferLocalTrailers', 'ApplyLimitsToCustomIds', 'SeasonalSections',
+                        'PreferLocalBackdrops', 'RandomizeThemeVideos', 'RandomizeLocalTrailers',
+                        'IncludeWatchedContent'
                     ];
 
                     keys.forEach(function (key) {

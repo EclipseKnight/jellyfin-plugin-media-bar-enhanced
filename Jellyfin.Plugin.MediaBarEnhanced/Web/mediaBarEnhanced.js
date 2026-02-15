@@ -42,6 +42,10 @@ const CONFIG = {
   enableVideoBackdrop: true,
   useSponsorBlock: true,
   preferLocalTrailers: false,
+  randomizeLocalTrailers: false,
+  preferLocalBackdrops: false,
+  randomizeThemeVideos: false,
+  includeWatchedContent: false,
   waitForTrailerToEnd: true,
   startMuted: true,
   fullWidthVideo: true,
@@ -1118,8 +1122,11 @@ const ApiUtils = {
         sortParams += `&sortOrder=${CONFIG.sortOrder}`;
       }
 
+      // Filter by isPlayed=False unless IncludeWatchedContent is enabled
+      const playedFilter = CONFIG.includeWatchedContent ? '' : '&isPlayed=False';
+
       const response = await fetch(
-        `${STATE.jellyfinData.serverAddress}/Items?IncludeItemTypes=Movie,Series&Recursive=true&hasOverview=true&imageTypes=Logo,Backdrop&${sortParams}&isPlayed=False&enableUserData=true&Limit=${CONFIG.maxItems}&fields=Id`,
+        `${STATE.jellyfinData.serverAddress}/Items?IncludeItemTypes=Movie,Series&Recursive=true&hasOverview=true&imageTypes=Logo,Backdrop&${sortParams}${playedFilter}&enableUserData=true&Limit=${CONFIG.maxItems}&fields=Id`,
         {
           headers: this.getAuthHeaders(),
         }
@@ -1371,20 +1378,68 @@ const ApiUtils = {
         return null;
       }
 
-      const trailers = await response.json();
-      if (trailers && trailers.length > 0) {
-        const trailer = trailers[0];
-        const mediaSourceId = trailer.MediaSources && trailer.MediaSources[0] ? trailer.MediaSources[0].Id : trailer.Id;
-        
-        // Return object with ID and URL
-        return {
-            id: trailer.Id,
-            url: `${STATE.jellyfinData.serverAddress}/Videos/${trailer.Id}/stream.mp4?Static=true&mediaSourceId=${mediaSourceId}&api_key=${STATE.jellyfinData.accessToken}`
-        };
+        const trailers = await response.json();
+        if (trailers && trailers.length > 0) {
+            
+            let trailer;
+            if (CONFIG.randomizeLocalTrailers && trailers.length > 1) {
+                const randomIndex = Math.floor(Math.random() * trailers.length);
+                trailer = trailers[randomIndex];
+                 console.log(`Using random local trailer (${randomIndex + 1}/${trailers.length}) for ${itemId}: ${trailer.Name}`);
+            } else {
+                trailer = trailers[0];
+            }
+
+            const mediaSourceId = trailer.MediaSources && trailer.MediaSources[0] ? trailer.MediaSources[0].Id : trailer.Id;
+
+            return {
+                id: trailer.Id,
+                url: `${STATE.jellyfinData.serverAddress}/Videos/${trailer.Id}/stream.mp4?mediaSourceId=${mediaSourceId}&api_key=${STATE.jellyfinData.accessToken}`
+            };
+        }
+        return null;
+    } catch (error) {
+      console.error(`Error fetching local trailer for ${itemId}:`, error);
+      return null;
+    }
+  },
+
+  /**
+   * Fetches theme videos for an item
+   * @param {string} itemId - Item ID
+   * @returns {Promise<Object|null>} Theme video data object {id, url} or null
+   */
+  async fetchThemeVideos(itemId) {
+    try {
+      const response = await fetch(
+          `${STATE.jellyfinData.serverAddress}/Items/${itemId}/ThemeVideos?userId=${STATE.jellyfinData.userId}`, 
+          { headers: this.getAuthHeaders() }
+      );
+      
+      if (response.ok) {
+           const data = await response.json();
+           const items = Array.isArray(data) ? data : (data.Items || []);
+           
+           if (items.length > 0) {
+               let video;
+               if (CONFIG.randomizeThemeVideos && items.length > 1) {
+                   const randomIndex = Math.floor(Math.random() * items.length);
+                   video = items[randomIndex];
+                   console.log(`Found Theme Video (Random ${randomIndex + 1}/${items.length}) via ThemeVideos endpoint: ${video.Name} (${video.Id})`);
+               } else {
+                   video = items[0];
+                   console.log(`Found Theme Video (First) via ThemeVideos endpoint: ${video.Name} (${video.Id})`);
+               }
+
+               return {
+                   id: video.Id,
+                   url: `${STATE.jellyfinData.serverAddress}/Videos/${video.Id}/stream.mp4?api_key=${STATE.jellyfinData.accessToken}`
+               };
+           }
       }
       return null;
     } catch (error) {
-      console.error(`Error fetching local trailer for ${itemId}:`, error);
+      console.error(`Error fetching theme videos for ${itemId}:`, error);
       return null;
     }
   }
@@ -1603,24 +1658,29 @@ const SlideCreator = {
           
           trailerUrl = {
               id: videoId,
-              url: `${STATE.jellyfinData.serverAddress}/Videos/${videoId}/stream.mp4?Static=true&api_key=${STATE.jellyfinData.accessToken}`
+              url: `${STATE.jellyfinData.serverAddress}/Videos/${videoId}/stream.mp4?api_key=${STATE.jellyfinData.accessToken}`
           };
       } else {
           // Assume it's a standard URL (YouTube, etc.)
           trailerUrl = customValue;
           console.log(`Using custom trailer URL for ${itemId}: ${trailerUrl}`);
       }
+    }
+    // 1b. Check Theme Video if preferred (Local Backdrop)
+    else if (CONFIG.preferLocalBackdrops && item.themeVideoUrl) {
+        trailerUrl = item.themeVideoUrl;
+        console.log(`Using theme video (local backdrop) for ${itemId}: ${trailerUrl.url || trailerUrl}`);
     } 
-    // 1b. Check Local Trailer if preferred
+    // 1c. Check Local Trailer if preferred
     else if (CONFIG.preferLocalTrailers && item.LocalTrailerCount > 0 && item.localTrailerUrl) {
          trailerUrl = item.localTrailerUrl;
          console.log(`Using local trailer for ${itemId}: ${trailerUrl}`);
     }
-    // 1c. Fallback to Remote Trailer
+    // 1d. Fallback to Remote Trailer
     else if (item.RemoteTrailers && item.RemoteTrailers.length > 0) {
       trailerUrl = item.RemoteTrailers[0].Url;
     }
-    // 1d. Final Fallback to Local Trailer (even if not preferred)
+    // 1e. Final Fallback to Local Trailer (even if not preferred)
     else if (item.LocalTrailerCount > 0 && item.localTrailerUrl) {
          trailerUrl = item.localTrailerUrl;
          console.log(`Using local trailer fallback for ${itemId}: ${trailerUrl}`);
@@ -2168,6 +2228,11 @@ const SlideCreator = {
       // Pre-fetch local trailer URL if needed
       if (CONFIG.preferLocalTrailers && item.LocalTrailerCount > 0) {
           item.localTrailerUrl = await ApiUtils.fetchLocalTrailer(itemId);
+      }
+
+      // Pre-fetch theme video URL if needed
+      if (CONFIG.preferLocalBackdrops) {
+          item.themeVideoUrl = await ApiUtils.fetchThemeVideos(itemId);
       }
 
       const slideElement = this.createSlideElement(
