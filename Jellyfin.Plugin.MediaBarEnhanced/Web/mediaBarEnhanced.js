@@ -1833,11 +1833,7 @@ const SlideCreator = {
                   if (event.data === YT.PlayerState.ENDED) {
                     const slide = document.querySelector(`.slide[data-item-id="${itemId}"]`);
                     if (slide && slide.classList.contains('active')) {
-                      if (CONFIG.waitForTrailerToEnd) {
-                        SlideshowManager.nextSlide();
-                      } else {
-                        event.target.playVideo(); // Loop if trailer is shorter than slide duration
-                      }
+                      SlideshowManager.nextSlide();
                     }
                   }
                 },
@@ -1860,9 +1856,7 @@ const SlideCreator = {
         const videoAttributes = {
           className: "backdrop video-backdrop",
           src: (typeof trailerUrl === 'object' ? trailerUrl.url : trailerUrl),
-          autoplay: false,
           preload: "auto",
-          loop: false,
           disablePictureInPicture: true,
           style: "object-fit: cover; object-position: center center; width: 100%; height: 100%; position: absolute; top: 0; left: 0; pointer-events: none;"
         };
@@ -1887,16 +1881,17 @@ const SlideCreator = {
           }
         });
 
-        backdrop.addEventListener('ended', () => {
-            const slide = document.querySelector(`.slide[data-item-id="${itemId}"]`);
+        backdrop.addEventListener('ended', (event) => {
+            const slide = event.target.closest('.slide');
             if (slide && slide.classList.contains('active')) {
               SlideshowManager.nextSlide();
             }
         });
 
-        backdrop.addEventListener('error', () => {
-          const slide = document.querySelector(`.slide[data-item-id="${itemId}"]`);
-          if (CONFIG.waitForTrailerToEnd && slide && slide.classList.contains('active')) {
+        backdrop.addEventListener('error', (event) => {
+          console.warn(`Local video error for item ${itemId}`);
+          const slide = event.target.closest('.slide');
+          if (slide && slide.classList.contains('active')) {
             SlideshowManager.nextSlide();
           }
         });
