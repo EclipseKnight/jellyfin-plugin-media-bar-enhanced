@@ -9,6 +9,14 @@
     "imageUrl": "https://raw.githubusercontent.com/CodeDevMLH/jellyfin-plugin-media-bar-enhanced/refs/heads/main/logo.png",
     "versions": [
       {
+        "version": "1.6.5.0",
+        "changelog": "- refactored seasonal UI settings\n- fix local trailer/backdrop issue that could potentially cause Jellyfin WebSockets to be 'crowded out'",
+        "targetAbi": "10.11.0.0",
+        "sourceUrl": "",
+        "checksum": "",
+        "timestamp": ""
+      },
+      {
         "version": "1.6.4.0",
         "changelog": "- fix slide transition when using local/backdrop videos",
         "targetAbi": "10.11.0.0",
