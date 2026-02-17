@@ -1853,11 +1853,12 @@ const SlideCreator = {
       } else if (!isYoutube) {
         isVideo = true;
 
+        const videoSrc = (typeof trailerUrl === 'object' ? trailerUrl.url : trailerUrl);
         const videoAttributes = {
           className: "backdrop video-backdrop",
-          src: (typeof trailerUrl === 'object' ? trailerUrl.url : trailerUrl),
-          preload: "auto",
+          preload: "none",
           disablePictureInPicture: true,
+          "data-src": videoSrc,
           style: "object-fit: cover; object-position: center center; width: 100%; height: 100%; position: absolute; top: 0; left: 0; pointer-events: none;"
         };
 
@@ -2356,7 +2357,7 @@ const SlideshowManager = {
       currentSlide.classList.add("active");
 
       // Manage Video Playback: Stop others, Play current
-      // 1. Stop all other YouTube players and local video elements
+      // 1. Stop all other YouTube players and local video elements, release connections
       if (STATE.slideshow.videoPlayers) {
         Object.keys(STATE.slideshow.videoPlayers).forEach(id => {
           if (id !== currentItemId) {
@@ -2366,11 +2367,17 @@ const SlideshowManager = {
             if (typeof p.pauseVideo === 'function') {
               p.pauseVideo();
             }
-            // HTML5 <video> element (local trailers)
+            // HTML5 <video> element (local trailers), release HTTP connection
             if (p instanceof HTMLVideoElement) {
               p.pause();
               p.muted = true;
               p.currentTime = 0;
+              // Save src to data-src and release the HTTP streaming connection
+              if (p.src && !p.getAttribute('data-src')) {
+                p.setAttribute('data-src', p.src);
+              }
+              p.removeAttribute('src');
+              p.load();
             }
           }
         });
@@ -2407,6 +2414,12 @@ const SlideshowManager = {
 
       if (videoBackdrop) {
         if (videoBackdrop.tagName === 'VIDEO') {
+          // Restore src from data-src if it was deactivated to release connections
+          const lazySrc = videoBackdrop.getAttribute('data-src');
+          if (lazySrc && !videoBackdrop.src) {
+            videoBackdrop.src = lazySrc;
+          }
+
           videoBackdrop.currentTime = 0;
 
           videoBackdrop.muted = STATE.slideshow.isMuted;
@@ -2605,7 +2618,7 @@ const SlideshowManager = {
    */
   pruneSlideCache() {
     const currentIndex = STATE.slideshow.currentSlideIndex;
-    const keepRange = 5;
+    const keepRange = CONFIG.preloadCount + 1;
     let prunedAny = false;
 
     Object.keys(STATE.slideshow.createdSlides).forEach((itemId) => {
@@ -2623,7 +2636,17 @@ const SlideshowManager = {
         if (STATE.slideshow.videoPlayers[itemId]) {
           const player = STATE.slideshow.videoPlayers[itemId];
           if (typeof player.destroy === 'function') {
+            // YouTube player
             player.destroy();
+          } else if (player instanceof HTMLVideoElement) {
+            // HTML5 video, release HTTP streaming connection
+            player.pause();
+            // Save src to data-src and release the HTTP streaming connection
+            if (player.src && !player.getAttribute('data-src')) {
+              player.setAttribute('data-src', player.src);
+            }
+            player.removeAttribute('src');
+            player.load();
           }
           delete STATE.slideshow.videoPlayers[itemId];
         }
@@ -2802,7 +2825,7 @@ const SlideshowManager = {
       });
     }
 
-    // 2. Stop and mute all HTML5 videos
+    // 2. Stop and mute all HTML5 videos, release connections
     const container = document.getElementById("slides-container");
     if (container) {
       container.querySelectorAll('video').forEach(video => {
@@ -2810,6 +2833,12 @@ const SlideshowManager = {
           video.pause();
           video.muted = true;
           video.currentTime = 0;
+          // Save src and release HTTP streaming connection
+          if (video.src && !video.getAttribute('data-src')) {
+            video.setAttribute('data-src', video.src);
+          }
+          video.removeAttribute('src');
+          video.load();
         } catch (e) {
           console.warn("Error stopping HTML5 video:", e);
         }
@@ -2842,9 +2871,14 @@ const SlideshowManager = {
       return;
     }
 
-    // HTML5 video: just resume, don't reset currentTime
+    // HTML5 video: restore src if needed, then resume
     const html5Video = currentSlide.querySelector('video.video-backdrop');
     if (html5Video) {
+      // Restore src from data-src if it was cleared to release connections
+      const lazySrc = html5Video.getAttribute('data-src');
+      if (lazySrc && !html5Video.src) {
+        html5Video.src = lazySrc;
+      }
       html5Video.muted = STATE.slideshow.isMuted;
       if (!STATE.slideshow.isMuted) html5Video.volume = 0.4;
       html5Video.play().catch(e => console.warn("Error resuming HTML5 video:", e));

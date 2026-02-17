@@ -22,15 +22,15 @@
                 <hr style="max-width: 800px; margin: 1em 0;">
 
                 <div style="margin-bottom: 1.5em;">
-                    <button class="jellyfin-tab-button active" onclick="showTab('basic', this)"
+                    <button class="jellyfin-tab-button active" onclick="showTab('media-bar-enhanced-basic', this)"
                         style="background: none; border: none; color: #fff; cursor: pointer; transition: color 0.3s, border-bottom 0.3s; padding: 0.5em 1em; border-bottom: 2px solid #00a4dc;">
                         <h3>General Settings</h3>
                     </button>
-                    <button class="jellyfin-tab-button" onclick="showTab('custom', this)"
+                    <button class="jellyfin-tab-button" onclick="showTab('media-bar-enhanced-custom', this)"
                         style="background: none; border: none; color: #ccc; cursor: pointer; transition: color 0.3s, border-bottom 0.3s; padding: 0.5em 1em; border-bottom: 2px solid transparent;">
                         <h3>Custom Content</h3>
                     </button>
-                    <button class="jellyfin-tab-button" onclick="showTab('advanced', this)"
+                    <button class="jellyfin-tab-button" onclick="showTab('media-bar-enhanced-advanced', this)"
                         style="background: none; border: none; color: #ccc; cursor: pointer; transition: color 0.3s, border-bottom 0.3s; padding: 0.5em 1em; border-bottom: 2px solid transparent;">
                         <h3>Advanced Settings</h3>
                     </button>
@@ -39,11 +39,11 @@
                 <form id="mediaBarEnhancedConfigForm">
 
                     <!-- BASIC TAB -->
-                    <div id="basic" class="tab-content">
+                    <div id="media-bar-enhanced-basic" class="tab-content">
                         <h2 class="sectionTitle">Main Plugin Settings</h2>
                         <div class="checkboxContainer checkboxContainer-withDescription">
                             <label>
-                                <input is="emby-checkbox" type="checkbox" id="IsEnabled" name="IsEnabled" />
+                                <input is="emby-checkbox" type="checkbox" id="MediaBarIsEnabled" name="MediaBarIsEnabled" />
                                 <span>Enable Media Bar Enhanced Plugin</span>
                             </label>
                             <div class="fieldDescription">Enable or disable the entire plugin functionality.</div>
@@ -71,7 +71,7 @@
                                     name="PreferLocalBackdrops" />
                                 <span>Prefer Local Backdrops / Theme Videos</span>
                             </label>
-                            <div class="fieldDescription">If enabled, local backdrop videos (Theme Videos) will be preferred over trailers.</div>
+                            <div class="fieldDescription">If enabled, local backdrop videos (Theme Videos) will be preferred over remote and local trailers.</div>
                         </div>
                         <div class="checkboxContainer checkboxContainer-withDescription">
                             <label>
@@ -101,7 +101,7 @@
                     </div>
 
                     <!-- CUSTOM CONTENT TAB -->
-                    <div id="custom" class="tab-content" style="display:none;">
+                    <div id="media-bar-enhanced-custom" class="tab-content" style="display:none;">
                         <!-- Default Custom Media IDs -->
                         <h2 class="sectionTitle">Custom Media IDs</h2>
                         <div class="checkboxContainer checkboxContainer-withDescription">
@@ -146,7 +146,7 @@
                                     Example:
                                     <code>https://your-jellyfin-url/web/#/details?id=<b style="color:red;">your-item-id</b>&serverId=your-server-id</code><br><br>
                                     You can also insert a name of a collection or playlist to fetch the IDs of all items in
-                                    it (will take the first hit.<br><b>Note:</b> there is currently no feedback if the name
+                                    it (will take the first hit.<br><b>Note:</b> There is currently no feedback if the name
                                     resolution succeeded, you will have to look if the bar displays the correct items).
                                 </p>
                             </div>
@@ -164,6 +164,12 @@
                                 during their active date ranges. If no season matches the current date, the default Custom Media IDs above or random selection are used as fallback.</div>
                         </div>
                         <div id="seasonalContentContainer" style="display: none;">
+
+                            <div style="background-color: rgba(255, 255, 255, 0.05); border-left: 4px solid #00a4dc; border-radius: 4px; padding: 1em 1.5em; margin: 1.5em 0; display: flex; align-items: center; gap: 1em;">
+                                <i class="material-icons" style="color: #00a4dc; font-size: 24px;">info</i>
+                                <div>Define seasonal rules to automatically select a selection of items based on the date. Rules are evaluated from top to bottom. The first matching rule wins.</div>
+                            </div>
+
                             <div id="seasonalSectionsList"></div>
                             <button is="emby-button" type="button" id="addSeasonBtn" class="raised emby-button"
                                 style="margin-top: 1em; display: inline-flex; align-items: center; gap: 0.4em;">
@@ -175,7 +181,7 @@
                     </div>
 
                     <!-- ADVANCED TAB -->
-                    <div id="advanced" class="tab-content" style="display:none;">
+                    <div id="media-bar-enhanced-advanced" class="tab-content" style="display:none;">
                         <h2 class="sectionTitle">Features</h2>
                         <div class="checkboxContainer checkboxContainer-withDescription">
                             <label>
@@ -443,7 +449,7 @@
                     ApiClient.getPluginConfiguration(MediaBarEnhancedConfigurationPage.pluginId).then(function (config) {
 
                         var keys = [
-                            'IsEnabled', 'ShuffleInterval', 'RetryInterval', 'MinSwipeDistance',
+                            'MediaBarIsEnabled', 'ShuffleInterval', 'RetryInterval', 'MinSwipeDistance',
                             'LoadingCheckInterval', 'MaxPlotLength', 'MaxMovies', 'MaxTvShows',
                             'MaxItems', 'PreloadCount', 'FadeTransitionDuration', 'MaxPaginationDots',
                             'SlideAnimationEnabled', 'EnableVideoBackdrop', 'UseSponsorBlock',
@@ -534,7 +540,7 @@
 
                     var config = {};
                     var keys = [
-                        'IsEnabled', 'ShuffleInterval', 'RetryInterval', 'MinSwipeDistance',
+                        'MediaBarIsEnabled', 'ShuffleInterval', 'RetryInterval', 'MinSwipeDistance',
                         'LoadingCheckInterval', 'MaxPlotLength', 'MaxMovies', 'MaxTvShows',
                         'MaxItems', 'PreloadCount', 'FadeTransitionDuration', 'MaxPaginationDots',
                         'SlideAnimationEnabled', 'EnableVideoBackdrop', 'UseSponsorBlock',
@@ -612,14 +618,18 @@
 
                     div.innerHTML =
                         '<div class="inputContainer" style="margin-bottom: 0.5em;">' +
-                        '    <label class="inputLabel" style="font-size: 1.2em; font-weight: bold; margin-bottom:0.5em; display:block;">' + labelText + '</label>' +
-                        '    <div style="display: flex; align-items: center;">' +
-                        '        <div style="flex-grow:1;">' +
-                        '            <input is="emby-input" type="text" class="emby-input section-name" value="' + (data.Name || '') + '" />' +
+                        '    <div style="display: flex; align-items: center; justify-content: space-between;">' +
+                        '        <label class="inputLabel section-title" style="font-size: 1.2em; font-weight: bold; margin-bottom:0.5em; display:block;">' + labelText + '</label>' +
+                        '        <div style="display: flex; gap: 0.5em;">' +
+                        '            <button type="button" is="paper-icon-button-light" class="btn-move-up" title="Move Up"><i class="material-icons">arrow_upward</i></button>' +
+                        '            <button type="button" is="paper-icon-button-light" class="btn-move-down" title="Move Down"><i class="material-icons">arrow_downward</i></button>' +
+                        '            <button type="button" is="paper-icon-button-light" class="btn-remove" title="Remove" style="color: #a94442;"><i class="material-icons">delete</i></button>' +
                         '        </div>' +
-                        '        <button type="button" class="raised emby-button remove-section" style="background: #a94442; min-width: unset; margin-left: 1em;">Remove</button>' +
                         '    </div>' +
-                        '    <div class="fieldDescription">Name of the season</div>' +
+                        '    <div class="inputContainer">' +
+                        '        <input is="emby-input" type="text" class="emby-input section-name" style="width: 60%;" value="' + (data.Name || '') + '" />' +
+                        '        <div class="fieldDescription">Name of the season</div>' +
+                        '    </div>' +
                         '</div>' +
                         '<div class="inputContainer" style="margin-bottom: 1em;">' +
                         '    <label class="inputLabel" style="margin-bottom:0.5em; display:block;">Active Period</label>' +
@@ -639,11 +649,36 @@
                         '    <div class="fieldDescription">Comma-separated or Newline separated list of Movie/Series/Collection IDs to show during this season.<br>Same options available as for the default media IDs.</div>' +
                         '</div>';
 
-                    div.querySelector('.remove-section').addEventListener('click', function() {
+                    div.querySelector('.btn-remove').addEventListener('click', function() {
                         div.remove();
+                        MediaBarEnhancedConfigurationPage.updateSectionTitles(container);
+                    });
+
+                    div.querySelector('.btn-move-up').addEventListener('click', function() {
+                        if (div.previousElementSibling) {
+                            container.insertBefore(div, div.previousElementSibling);
+                            MediaBarEnhancedConfigurationPage.updateSectionTitles(container);
+                        }
+                    });
+
+                    div.querySelector('.btn-move-down').addEventListener('click', function() {
+                        if (div.nextElementSibling) {
+                            container.insertBefore(div.nextElementSibling, div);
+                            MediaBarEnhancedConfigurationPage.updateSectionTitles(container);
+                        }
                     });
 
                     container.appendChild(div);
+                },
+
+                updateSectionTitles: function(container) {
+                    var sections = container.querySelectorAll('.seasonal-section');
+                    sections.forEach(function(section, index) {
+                        var title = section.querySelector('.section-title');
+                        if (title) {
+                            title.innerText = 'Season list #' + (index + 1);
+                        }
+                    });
                 },
 
                 getSeasonalSectionsFromUI: function(page) {
