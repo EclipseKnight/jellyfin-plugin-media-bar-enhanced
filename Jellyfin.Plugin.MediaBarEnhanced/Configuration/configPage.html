@@ -449,7 +449,7 @@
                     ApiClient.getPluginConfiguration(MediaBarEnhancedConfigurationPage.pluginId).then(function (config) {
 
                         var keys = [
-                            'MediaBarIsEnabled', 'ShuffleInterval', 'RetryInterval', 'MinSwipeDistance',
+                            'ShuffleInterval', 'RetryInterval', 'MinSwipeDistance',
                             'LoadingCheckInterval', 'MaxPlotLength', 'MaxMovies', 'MaxTvShows',
                             'MaxItems', 'PreloadCount', 'FadeTransitionDuration', 'MaxPaginationDots',
                             'SlideAnimationEnabled', 'EnableVideoBackdrop', 'UseSponsorBlock',
@@ -461,6 +461,12 @@
                             'PreferLocalBackdrops', 'RandomizeThemeVideos', 'RandomizeLocalTrailers',
                             'IncludeWatchedContent'
                         ];
+
+                        // Manual mapping for MediaBarIsEnabled -> IsEnabled, to avoid conflicts with other plugins
+                        var mediaBarEnabledCheckbox = page.querySelector('#MediaBarIsEnabled');
+                        if (mediaBarEnabledCheckbox) {
+                            mediaBarEnabledCheckbox.checked = config.IsEnabled;
+                        }
 
                         keys.forEach(function (key) {
                             var el = page.querySelector('#' + key);
@@ -539,8 +545,15 @@
                     if (seasonalInput) seasonalInput.value = sectionsJson;
 
                     var config = {};
+                    
+                    // Manual mapping for MediaBarIsEnabled -> IsEnabled, to avoid conflicts with other plugins
+                    var mediaBarEnabledCheckbox = page.querySelector('#MediaBarIsEnabled');
+                    if (mediaBarEnabledCheckbox) {
+                        config.IsEnabled = mediaBarEnabledCheckbox.checked;
+                    }
+
                     var keys = [
-                        'MediaBarIsEnabled', 'ShuffleInterval', 'RetryInterval', 'MinSwipeDistance',
+                        'ShuffleInterval', 'RetryInterval', 'MinSwipeDistance',
                         'LoadingCheckInterval', 'MaxPlotLength', 'MaxMovies', 'MaxTvShows',
                         'MaxItems', 'PreloadCount', 'FadeTransitionDuration', 'MaxPaginationDots',
                         'SlideAnimationEnabled', 'EnableVideoBackdrop', 'UseSponsorBlock',

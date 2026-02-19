@@ -63,6 +63,7 @@ const CONFIG = {
   sortOrder: "Ascending",
   applyLimitsToCustomIds: false,
   seasonalSections: "[]",
+  isEnabled: true,
 };
 
 // State management
@@ -1638,6 +1639,7 @@ const SlideCreator = {
       "data-item-id": itemId,
     });
 
+    let videoBackdrop;
     let backdrop;
     let isVideo = false;
     let trailerUrl = null;
@@ -1721,10 +1723,18 @@ const SlideCreator = {
         // Create container for YouTube API
         const videoClass = CONFIG.fullWidthVideo ? "video-backdrop-full" : "video-backdrop-default";
 
-        backdrop = SlideUtils.createElement("div", {
-          className: `backdrop video-backdrop ${videoClass}`,
-          id: `youtube-player-${itemId}`
+        // Create a wrapper for opacity transition
+        videoBackdrop = SlideUtils.createElement("div", {
+            className: `backdrop video-backdrop ${videoClass}`,
+            style: "opacity: 0; transition: opacity 1.2s ease-in-out;" // Start interrupted/transparent
         });
+
+        const ytPlayerDiv = SlideUtils.createElement("div", {
+          id: `youtube-player-${itemId}`,
+          style: "width: 100%; height: 100%;"
+        });
+        
+        videoBackdrop.appendChild(ytPlayerDiv);
 
         // Initialize YouTube Player
         SlideUtils.loadYouTubeIframeAPI().then(() => {
@@ -1781,6 +1791,9 @@ const SlideCreator = {
                   event.target._startTime = playerVars.start || 0;
                   event.target._endTime = playerVars.end || undefined;
                   event.target._videoId = videoId;
+                  
+                  // Store reference to wrapper for fading
+                  event.target._wrapperDiv = videoBackdrop;
 
                   if (STATE.slideshow.isMuted) {
                     event.target.mute();
@@ -1830,6 +1843,13 @@ const SlideCreator = {
                   }
                 },
                 'onStateChange': (event) => {
+                  // Fade in when playing
+                  if (event.data === YT.PlayerState.PLAYING) {
+                      if (event.target._wrapperDiv) {
+                          event.target._wrapperDiv.style.opacity = "1";
+                      }
+                  }
+                  
                   if (event.data === YT.PlayerState.ENDED) {
                     const slide = document.querySelector(`.slide[data-item-id="${itemId}"]`);
                     if (slide && slide.classList.contains('active')) {
@@ -1859,17 +1879,17 @@ const SlideCreator = {
           preload: "none",
           disablePictureInPicture: true,
           "data-src": videoSrc,
-          style: "object-fit: cover; object-position: center center; width: 100%; height: 100%; position: absolute; top: 0; left: 0; pointer-events: none;"
+          style: "object-fit: cover; object-position: center center; width: 100%; height: 100%; position: absolute; top: 0; left: 0; pointer-events: none; opacity: 0; transition: opacity 1.2s ease-in-out;"
         };
 
         videoAttributes.muted = "";
 
-        backdrop = SlideUtils.createElement("video", videoAttributes);
-        backdrop.volume = 0.4;
+        videoBackdrop = SlideUtils.createElement("video", videoAttributes);
+        videoBackdrop.volume = 0.4;
 
-        STATE.slideshow.videoPlayers[itemId] = backdrop;
+        STATE.slideshow.videoPlayers[itemId] = videoBackdrop;
 
-        backdrop.addEventListener('play', (event) => {
+        videoBackdrop.addEventListener('play', (event) => {
           const slide = document.querySelector(`.slide[data-item-id="${itemId}"]`);
           if (!slide || !slide.classList.contains('active')) {
             console.log(`Local video ${itemId} started playing but slide is not active, pausing.`);
@@ -1877,19 +1897,23 @@ const SlideCreator = {
             event.target.currentTime = 0;
             return;
           }
+          
+          // Fade in
+          event.target.style.opacity = "1";
+          
           if (CONFIG.waitForTrailerToEnd && STATE.slideshow.slideInterval) {
             STATE.slideshow.slideInterval.stop();
           }
         });
 
-        backdrop.addEventListener('ended', (event) => {
+        videoBackdrop.addEventListener('ended', (event) => {
             const slide = event.target.closest('.slide');
             if (slide && slide.classList.contains('active')) {
               SlideshowManager.nextSlide();
             }
         });
 
-        backdrop.addEventListener('error', (event) => {
+        videoBackdrop.addEventListener('error', (event) => {
           console.warn(`Local video error for item ${itemId}`);
           const slide = event.target.closest('.slide');
           if (slide && slide.classList.contains('active')) {
@@ -1899,13 +1923,18 @@ const SlideCreator = {
       }
     }
 
-    if (!isVideo) {
-      backdrop = SlideUtils.createElement("img", {
-        className: "backdrop high-quality",
-        src: this.buildImageUrl(item, "Backdrop", 0, serverAddress, 60),
-        alt: LocalizationUtils.getLocalizedString('Backdrop', 'Backdrop'),
-        loading: "eager",
-      });
+    // Always create a static backdrop image (to show while video loads or if no video)
+    backdrop = SlideUtils.createElement("img", {
+      className: "backdrop high-quality",
+      src: this.buildImageUrl(item, "Backdrop", 0, serverAddress, 60),
+      alt: LocalizationUtils.getLocalizedString('Backdrop', 'Backdrop'),
+      loading: "eager",
+    });
+
+    // If video, static backdrop should be strictly a background (no animation)
+    if (isVideo) {
+        backdrop.style.animation = "none";
+        backdrop.style.transition = "none";
     }
 
     const backdropOverlay = SlideUtils.createElement("div", {
@@ -1915,7 +1944,13 @@ const SlideCreator = {
     const backdropContainer = SlideUtils.createElement("div", {
       className: "backdrop-container" + (isVideo && CONFIG.fullWidthVideo ? " full-width-video" : ""),
     });
+    
     backdropContainer.append(backdrop, backdropOverlay);
+
+    // If video exists, append on top of static backdrop
+    if (isVideo && videoBackdrop) {
+        backdropContainer.appendChild(videoBackdrop);
+    }
 
     const logo = SlideUtils.createElement("img", {
       className: "logo high-quality",
@@ -2358,30 +2393,32 @@ const SlideshowManager = {
 
       // Manage Video Playback: Stop others, Play current
       // 1. Stop all other YouTube players and local video elements, release connections
-      if (STATE.slideshow.videoPlayers) {
-        Object.keys(STATE.slideshow.videoPlayers).forEach(id => {
-          if (id !== currentItemId) {
-            const p = STATE.slideshow.videoPlayers[id];
-            if (!p) return;
-            // YouTube player
-            if (typeof p.pauseVideo === 'function') {
-              p.pauseVideo();
-            }
-            // HTML5 <video> element (local trailers), release HTTP connection
-            if (p instanceof HTMLVideoElement) {
-              p.pause();
-              p.muted = true;
-              p.currentTime = 0;
-              // Save src to data-src and release the HTTP streaming connection
-              if (p.src && !p.getAttribute('data-src')) {
-                p.setAttribute('data-src', p.src);
+      setTimeout(() => {
+        if (STATE.slideshow.videoPlayers) {
+          Object.keys(STATE.slideshow.videoPlayers).forEach(id => {
+            if (id !== currentItemId) {
+              const p = STATE.slideshow.videoPlayers[id];
+              if (!p) return;
+              // YouTube player
+              if (typeof p.pauseVideo === 'function') {
+                p.pauseVideo();
               }
-              p.removeAttribute('src');
-              p.load();
+              // HTML5 <video> element (local trailers), release HTTP connection
+              if (p instanceof HTMLVideoElement) {
+                p.pause();
+                p.muted = true;
+                p.currentTime = 0;
+                // Save src to data-src and release the HTTP streaming connection
+                if (p.src && !p.getAttribute('data-src')) {
+                  p.setAttribute('data-src', p.src);
+                }
+                p.removeAttribute('src');
+                p.load();
+              }
             }
-          }
-        });
-      }
+          });
+        }
+      }, CONFIG.fadeTransitionDuration);
 
       // 2. Pause all other HTML5 videos e.g. local trailers
       document.querySelectorAll('video').forEach(video => {
