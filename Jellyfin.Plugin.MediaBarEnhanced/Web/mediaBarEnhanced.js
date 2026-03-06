@@ -164,6 +164,14 @@ const isUserLoggedIn = () => {
 };
 
 /**
+ * Detects if the current device is a low-power device (Smart TVs, etc.)
+ * @returns {boolean} True if running on a low-power device
+ */
+const isLowPowerDevice = () => {
+  return /webOS|LG Browser|SMART-TV|SmartTV|Tizen|Viera|NetCast|Roku|VIDAA/i.test(navigator.userAgent);
+};
+
+/**
  * Initializes Jellyfin data from ApiClient
  * @param {Function} callback - Function to call once data is initialized
  */
@@ -734,16 +742,21 @@ const SlideUtils = {
     }
 
     if (isYoutube && videoId) {
-      const playerDiv = this.createElement('div', { id: 'modal-yt-player' });
-      contentContainer.appendChild(playerDiv);
+      const ytIframe = this.createElement('iframe', {
+        id: 'modal-yt-player',
+        src: `https://www.youtube-nocookie.com/embed/${videoId}?enablejsapi=1&origin=${encodeURIComponent(window.location.origin)}`,
+        allow: 'autoplay; encrypted-media',
+        style: 'width: 100%; height: 100%; border: none;',
+        referrerpolicy: 'strict-origin-when-cross-origin',
+        allowfullscreen: 'true'
+      });
+
+      contentContainer.appendChild(ytIframe);
       overlay.append(closeButton, contentContainer);
       document.body.appendChild(overlay);
 
       this.loadYouTubeIframeAPI().then(() => {
-        new YT.Player('modal-yt-player', {
-          height: '100%',
-          width: '100%',
-          videoId: videoId,
+        new YT.Player(ytIframe, {
           playerVars: {
             autoplay: 1,
             controls: 1,
@@ -751,7 +764,6 @@ const SlideUtils = {
             rel: 0,
             playsinline: 1,
             origin: window.location.origin,
-            widget_referrer: window.location.href,
             enablejsapi: 1
           }
         });
@@ -1395,7 +1407,7 @@ const ApiUtils = {
 
             return {
                 id: trailer.Id,
-                url: `${STATE.jellyfinData.serverAddress}/Videos/${trailer.Id}/stream.mp4?mediaSourceId=${mediaSourceId}&api_key=${STATE.jellyfinData.accessToken}`
+                url: `${STATE.jellyfinData.serverAddress}/Videos/${trailer.Id}/stream.mp4?mediaSourceId=${mediaSourceId}&api_key=${STATE.jellyfinData.accessToken}&static=true`
             };
         }
         return null;
@@ -1434,7 +1446,7 @@ const ApiUtils = {
 
                return {
                    id: video.Id,
-                   url: `${STATE.jellyfinData.serverAddress}/Videos/${video.Id}/stream.mp4?api_key=${STATE.jellyfinData.accessToken}`
+                   url: `${STATE.jellyfinData.serverAddress}/Videos/${video.Id}/stream.mp4?api_key=${STATE.jellyfinData.accessToken}&static=true`
                };
            }
       }
@@ -1660,7 +1672,7 @@ const SlideCreator = {
           
           trailerUrl = {
               id: videoId,
-              url: `${STATE.jellyfinData.serverAddress}/Videos/${videoId}/stream.mp4?api_key=${STATE.jellyfinData.accessToken}`
+              url: `${STATE.jellyfinData.serverAddress}/Videos/${videoId}/stream.mp4?api_key=${STATE.jellyfinData.accessToken}&static=true`
           };
       } else {
           // Assume it's a standard URL (YouTube, etc.)
@@ -1688,7 +1700,7 @@ const SlideCreator = {
          console.log(`Using local trailer fallback for ${itemId}: ${trailerUrl}`);
     }
 
-    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
     
     // Client Setting Overrides
     const enableVideo = MediaBarEnhancedSettingsManager.getSetting('videoBackdrops', CONFIG.enableVideoBackdrop);
@@ -1718,7 +1730,12 @@ const SlideCreator = {
         console.warn("Invalid trailer URL:", trailerUrl);
       }
 
-      if (isYoutube && videoId) {
+      const isLowPower = isLowPowerDevice();
+      const itemIndex = STATE.slideshow.itemIds ? STATE.slideshow.itemIds.indexOf(itemId) : -1;
+      const isActiveSlide = itemIndex !== -1 && itemIndex === STATE.slideshow.currentSlideIndex;
+      const shouldCreateVideo = !isLowPower || isActiveSlide;
+
+      if (isYoutube && videoId && shouldCreateVideo) {
         isVideo = true;
         // Create container for YouTube API
         const videoClass = CONFIG.fullWidthVideo ? "video-backdrop-full" : "video-backdrop-default";
@@ -1729,12 +1746,17 @@ const SlideCreator = {
             style: "opacity: 0; transition: opacity 1.2s ease-in-out;" // Start interrupted/transparent
         });
 
-        const ytPlayerDiv = SlideUtils.createElement("div", {
+        // Create an iframe upfront
+        const ytPlayerIframe = SlideUtils.createElement("iframe", {
           id: `youtube-player-${itemId}`,
-          style: "width: 100%; height: 100%;"
+          src: `https://www.youtube-nocookie.com/embed/${videoId}?enablejsapi=1&origin=${encodeURIComponent(window.location.origin)}`,
+          style: "width: 100%; height: 100%; border: none;",
+          allow: "autoplay; encrypted-media",
+          referrerpolicy: "strict-origin-when-cross-origin",
+          allowfullscreen: "true"
         });
         
-        videoBackdrop.appendChild(ytPlayerDiv);
+        videoBackdrop.appendChild(ytPlayerIframe);
 
         // Initialize YouTube Player
         SlideUtils.loadYouTubeIframeAPI().then(() => {
@@ -1751,7 +1773,6 @@ const SlideCreator = {
               loop: 0,
               playsinline: 1,
               origin: window.location.origin,
-              widget_referrer: window.location.href,
               enablejsapi: 1
             };
 
@@ -1780,10 +1801,7 @@ const SlideCreator = {
               console.info(`SponsorBlock outro detected for video ${videoId}: ending at ${playerVars.end}s`);
             }
 
-            STATE.slideshow.videoPlayers[itemId] = new YT.Player(`youtube-player-${itemId}`, {
-              height: '100%',
-              width: '100%',
-              videoId: videoId,
+            STATE.slideshow.videoPlayers[itemId] = new YT.Player(ytPlayerIframe, {
               playerVars: playerVars,
               events: {
                 'onReady': (event) => {
@@ -1870,7 +1888,7 @@ const SlideCreator = {
         });
 
         // 2. Check for local video trailers in MediaSources if yt is not available
-      } else if (!isYoutube) {
+      } else if (!isYoutube && shouldCreateVideo) {
         isVideo = true;
 
         const videoSrc = (typeof trailerUrl === 'object' ? trailerUrl.url : trailerUrl);
@@ -2562,7 +2580,7 @@ const SlideshowManager = {
         STATE.slideshow.isTransitioning = false;
 
         if (previousVisibleSlide) {
-          const enableAnimations = MediaBarEnhancedSettingsManager.getSetting('slideAnimations', CONFIG.slideAnimationEnabled);
+          const enableAnimations = MediaBarEnhancedSettingsManager.getSetting('slideAnimations', CONFIG.slideAnimationEnabled) && !isLowPowerDevice();
           if (enableAnimations) {
             const prevBackdrop = previousVisibleSlide.querySelector(".backdrop");
             const prevLogo = previousVisibleSlide.querySelector(".logo");
@@ -2603,7 +2621,9 @@ const SlideshowManager = {
    */
   async preloadAdjacentSlides(currentIndex) {
     const totalItems = STATE.slideshow.totalItems;
-    const preloadCount = Math.min(Math.max(CONFIG.preloadCount || 1, 1), 5);
+    let preloadCount = Math.min(Math.max(CONFIG.preloadCount || 1, 1), 5);
+    if (isLowPowerDevice()) preloadCount = 1; // Strict limit for TVs
+    
     const preloadedIds = new Set();
 
     // Preload next slides
