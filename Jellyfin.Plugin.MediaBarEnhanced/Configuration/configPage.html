@@ -43,7 +43,8 @@
                         <h2 class="sectionTitle">Main Plugin Settings</h2>
                         <div class="checkboxContainer checkboxContainer-withDescription">
                             <label>
-                                <input is="emby-checkbox" type="checkbox" id="MediaBarIsEnabled" name="MediaBarIsEnabled" />
+                                <input is="emby-checkbox" type="checkbox" id="MediaBarIsEnabled"
+                                    name="MediaBarIsEnabled" />
                                 <span>Enable Media Bar Enhanced Plugin</span>
                             </label>
                             <div class="fieldDescription">Enable or disable the entire plugin functionality.</div>
@@ -57,21 +58,25 @@
                             <div class="fieldDescription">Show trailers as background if available.<br>Adds a
                                 mute/unmute and pause/play button to control the video in the right top corner.</div>
                         </div>
-                        <div class="checkboxContainer checkboxContainer-withDescription" id="PreferLocalTrailersContainer">
+                        <div class="checkboxContainer checkboxContainer-withDescription"
+                            id="PreferLocalTrailersContainer">
                             <label>
                                 <input is="emby-checkbox" type="checkbox" id="PreferLocalTrailers"
                                     name="PreferLocalTrailers" />
                                 <span>Prefer Local Trailers</span>
                             </label>
-                            <div class="fieldDescription">If enabled, local trailers will be preferred over remote (YouTube) trailers.</div>
+                            <div class="fieldDescription">If enabled, local trailers will be preferred over remote
+                                (YouTube) trailers.</div>
                         </div>
-                        <div class="checkboxContainer checkboxContainer-withDescription" id="PreferLocalBackdropsContainer">
+                        <div class="checkboxContainer checkboxContainer-withDescription"
+                            id="PreferLocalBackdropsContainer">
                             <label>
                                 <input is="emby-checkbox" type="checkbox" id="PreferLocalBackdrops"
                                     name="PreferLocalBackdrops" />
                                 <span>Prefer Local Backdrops / Theme Videos</span>
                             </label>
-                            <div class="fieldDescription">If enabled, local backdrop videos (Theme Videos) will be preferred over remote and local trailers.</div>
+                            <div class="fieldDescription">If enabled, local backdrop videos (Theme Videos) will be
+                                preferred over remote and local trailers.</div>
                         </div>
                         <div class="checkboxContainer checkboxContainer-withDescription">
                             <label>
@@ -111,7 +116,8 @@
                                 <span>Enable Custom Media IDs</span>
                             </label>
                             <div class="fieldDescription">If enabled, the slideshow will show the items listed
-                                below as the default content. If the list is empty, random items from your library are used.</div>
+                                below as the default content. If the list is empty, random items from your library are
+                                used.</div>
                         </div>
                         <div class="checkboxContainer checkboxContainer-withDescription">
                             <label>
@@ -119,35 +125,47 @@
                                     name="ApplyLimitsToCustomIds" />
                                 <span>Apply Limits to Custom IDs</span>
                             </label>
-                            <div class="fieldDescription">If enabled, the Max Items limit (Advanced &rarr; Content Limits) will also apply to Custom Media IDs and Collections. By default, custom lists are not limited.</div>
+                            <div class="fieldDescription">If enabled, the Max Items limit (Advanced &rarr; Content
+                                Limits) will also apply to Custom Media IDs and Collections. By default, custom lists
+                                are not limited.</div>
                         </div>
                         <div id="customMediaIdsContainer">
                             <div class="inputContainer">
-                                <label class="inputLabel inputLabelUnfocused" for="CustomMediaIds">Default Media/Collection/Playlist IDs (Newline or Comma-separated)</label>
-                                <textarea class="emby-textarea" is="emby-textarea" id="CustomMediaIds" name="CustomMediaIds"
+                                <label class="inputLabel inputLabelUnfocused" for="CustomMediaIds">Default
+                                    Media/Collection/Playlist IDs (Newline or Comma-separated)</label>
+                                <textarea class="emby-textarea" is="emby-textarea" id="CustomMediaIds"
+                                    name="CustomMediaIds"
                                     style="width: 100%; height: 150px; font-family: monospace;"></textarea>
-                                <div class="fieldDescription">Enter the IDs of the items you want to show in the slideshow as your default content. You can separate them by new line or comma.
+                                <div class="fieldDescription">Enter the IDs of the items you want to show in the
+                                    slideshow as your default content. You can separate them by new line or comma.
                                     <br><br>
-                                    <b>Manual Trailer/Video Override:</b> You can specify a YouTube URL <b>OR</b> a Jellyfin Item ID (e.g. for a Theme Video) for an item by adding it in
-                                    brackets: <br> <code>e.g. ID DESCRIPTION [https://youtu.be/...]</code> or <code>ID [JellyfinItemId] DESCRIPTION</code>.
+                                    <b>Manual Trailer/Video Override:</b> You can specify a YouTube URL <b>OR</b> a
+                                    Jellyfin Item ID (e.g. for a Theme Video) for an item by adding it in
+                                    brackets: <br> <code>e.g. ID DESCRIPTION [https://youtu.be/...]</code> or
+                                    <code>ID [JellyfinItemId] DESCRIPTION</code>.
                                     <br>
                                     Methods:
                                     <ul>
                                         <li><b>YouTube URL:</b> Play a remote trailer from YouTube.</li>
-                                        <li><b>Jellyfin Item ID (GUID):</b> Play the video of another library item (e.g. a Theme Video or Backdrop Video) using the native player.</li>
+                                        <li><b>Jellyfin Item ID (GUID):</b> Play the video of another library item (e.g.
+                                            a Theme Video or Backdrop Video) using the native player.</li>
                                     </ul>
-                                    You can also add a description after the ID using any separator like space, pipe (|) or dash (-): <br>e.g. <code>ID DESCRIPTION</code> or <code>ID | DESCRIPTION</code>
+                                    You can also add a description after the ID using any separator like space, pipe (|)
+                                    or dash (-): <br>e.g. <code>ID DESCRIPTION</code> or <code>ID | DESCRIPTION</code>
                                     <br><br>
-                                    <b>Note:</b> If using a <b>Collection Name</b> (instead of an ID) combined with a description, you <b>MUST</b> use the pipe (|) separator.
+                                    <b>Note:</b> If using a <b>Collection Name</b> (instead of an ID) combined with a
+                                    description, you <b>MUST</b> use the pipe (|) separator.
                                     <br>
                                     <b>Note:</b> The separator <b>MUST NOT</b> be a hex character (0-9, a-f).
                                 </div>
-                                <p>You can find the IDs of your items in the URL of the item page in the web interface.<br>
+                                <p>You can find the IDs of your items in the URL of the item page in the web
+                                    interface.<br>
                                     Example:
                                     <code>https://your-jellyfin-url/web/#/details?id=<b style="color:red;">your-item-id</b>&serverId=your-server-id</code><br><br>
-                                    You can also insert a name of a collection or playlist to fetch the IDs of all items in
-                                    it (will take the first hit.<br><b>Note:</b> There is currently no feedback if the name
-                                    resolution succeeded, you will have to look if the bar displays the correct items).
+                                    You can also insert a name of a collection or playlist to fetch the IDs of all items
+                                    in it (will take the first hit.<br><b>Note:</b> There is currently no feedback if
+                                    the name resolution succeeded, you will have to look if the bar displays the correct
+                                    items).
                                 </p>
                             </div>
                         </div>
@@ -160,14 +178,18 @@
                                     name="EnableSeasonalContent" />
                                 <span>Enable Seasonal Content</span>
                             </label>
-                            <div class="fieldDescription">When enabled, seasonal sections below will override the default list or random selection
-                                during their active date ranges. If no season matches the current date, the default Custom Media IDs above or random selection are used as fallback.</div>
+                            <div class="fieldDescription">When enabled, seasonal sections below will override the
+                                default list or random selection
+                                during their active date ranges. If no season matches the current date, the default
+                                Custom Media IDs above or random selection are used as fallback.</div>
                         </div>
                         <div id="seasonalContentContainer" style="display: none;">
 
-                            <div style="background-color: rgba(255, 255, 255, 0.05); border-left: 4px solid #00a4dc; border-radius: 4px; padding: 1em 1.5em; margin: 1.5em 0; display: flex; align-items: center; gap: 1em;">
+                            <div
+                                style="background-color: rgba(255, 255, 255, 0.05); border-left: 4px solid #00a4dc; border-radius: 4px; padding: 1em 1.5em; margin: 1.5em 0; display: flex; align-items: center; gap: 1em;">
                                 <i class="material-icons" style="color: #00a4dc; font-size: 24px;">info</i>
-                                <div>Define seasonal rules to automatically select a selection of items based on the date. Rules are evaluated from top to bottom. The first matching rule wins.</div>
+                                <div>Define seasonal rules to automatically select a selection of items based on the
+                                    date. Rules are evaluated from top to bottom. The first matching rule wins.</div>
                             </div>
 
                             <div id="seasonalSectionsList"></div>
@@ -189,8 +211,9 @@
                                     name="SlideAnimationEnabled" />
                                 <span>Enable Slide Animations</span>
                             </label>
-                            <div class="fieldDescription">Enable the zooming-in effect on background images when a new slide is
-                                shown (does not affect trailer backdrops). Attention: This may cause performance issues on weaker client hardware.</div>
+                            <div class="fieldDescription">Enable the zooming-in effect on background images when a new
+                                slide is shown (does not affect trailer backdrops). Attention: This may cause
+                                performance issues on weaker client hardware.</div>
                         </div>
                         <div class="checkboxContainer checkboxContainer-withDescription">
                             <label>
@@ -199,7 +222,8 @@
                                 <span>Enable Client-Side Settings</span>
                             </label>
                             <div class="fieldDescription">If enabled, users will see a media bar icon in the header to
-                                override settings (like disabling the bar or trailer backdrops) locally on their device.</div>
+                                override settings (like disabling the bar or trailer backdrops) locally on their device.
+                            </div>
                         </div>
                         <div class="checkboxContainer checkboxContainer-withDescription">
                             <label>
@@ -207,7 +231,8 @@
                                     name="RandomizeThemeVideos" />
                                 <span>Randomize Backdrop Video</span>
                             </label>
-                            <div class="fieldDescription">If enabled, a random video from the backdrops/theme videos will be selected instead of the first one (if multiple exist).</div>
+                            <div class="fieldDescription">If enabled, a random video from the backdrops/theme videos
+                                will be selected instead of the first one (if multiple exist).</div>
                         </div>
                         <div class="checkboxContainer checkboxContainer-withDescription">
                             <label>
@@ -215,18 +240,22 @@
                                     name="RandomizeLocalTrailers" />
                                 <span>Randomize Local Trailer</span>
                             </label>
-                            <div class="fieldDescription">If enabled, a random local trailer will be selected instead of the first one (if multiple exist).</div>
+                            <div class="fieldDescription">If enabled, a random local trailer will be selected instead of
+                                the first one (if multiple exist).</div>
                         </div>
                         <div class="checkboxContainer checkboxContainer-withDescription">
                             <label>
                                 <input is="emby-checkbox" type="checkbox" id="UseSponsorBlock" name="UseSponsorBlock" />
                                 <span>Use SponsorBlock</span>
                             </label>
-                            <div class="fieldDescription">Skip intro/outro segments in YouTube trailers (if data is available).</div>
+                            <div class="fieldDescription">Skip intro/outro segments in YouTube trailers (if data is
+                                available).</div>
                         </div>
                         <div class="selectContainer">
                             <label class="selectLabel" for="PreferredVideoQuality">Preferred YouTube Quality</label>
-                            <select is="emby-select" id="PreferredVideoQuality" name="PreferredVideoQuality" class="selectLayout emby-select-withcolor emby-select" style="width: 100%; -webkit-appearance: menulist; appearance: menulist;">
+                            <select is="emby-select" id="PreferredVideoQuality" name="PreferredVideoQuality"
+                                class="selectLayout emby-select-withcolor emby-select"
+                                style="width: 100%; -webkit-appearance: menulist; appearance: menulist;">
                                 <option value="Auto">Auto (Smart)</option>
                                 <option value="Maximum">Maximum (4K+)</option>
                                 <option value="1080p">1080p</option>
@@ -241,7 +270,9 @@
                                 <span>Start Muted</span>
                             </label>
                             <div class="fieldDescription">Start trailer video playback muted. (Known issue: In the
-                                Android/IOS app, backdrop trailers are always muted.)</div>
+                                Android/IOS app, backdrop trailers are always muted.)<br>
+                                <b style="color:#ffcc00">Warning:</b> Disabling this may cause autoplay to fail on
+                                certain browsers due to strict autoplay policies.</div>
                         </div>
                         <div class="checkboxContainer checkboxContainer-withDescription">
                             <label>
@@ -328,7 +359,9 @@
                         <h2 class="sectionTitle">Content Sorting</h2>
                         <div class="selectContainer">
                             <label class="selectLabel" for="SortBy">Sort By</label>
-                            <select is="emby-select" id="SortBy" name="SortBy" class="selectLayout emby-select-withcolor emby-select" style="width: 100%; -webkit-appearance: menulist; appearance: menulist;">
+                            <select is="emby-select" id="SortBy" name="SortBy"
+                                class="selectLayout emby-select-withcolor emby-select"
+                                style="width: 100%; -webkit-appearance: menulist; appearance: menulist;">
                                 <option value="Random">Random</option>
                                 <option value="Original">Original (Custom List Order)</option>
                                 <option value="PremiereDate">Premiere Date</option>
@@ -342,14 +375,17 @@
                         </div>
                         <div class="selectContainer">
                             <label class="selectLabel" for="SortOrder">Sort Order</label>
-                            <select is="emby-select" id="SortOrder" name="SortOrder" class="selectLayout emby-select-withcolor emby-select" style="width: 100%; -webkit-appearance: menulist; appearance: menulist;">
+                            <select is="emby-select" id="SortOrder" name="SortOrder"
+                                class="selectLayout emby-select-withcolor emby-select"
+                                style="width: 100%; -webkit-appearance: menulist; appearance: menulist;">
                                 <option value="Ascending">Ascending</option>
                                 <option value="Descending">Descending</option>
                             </select>
                             <div class="fieldDescription">Sort items in Ascending or Descending order.</div>
                         </div>
                         <div class="fieldDescription" style="margin-bottom: 2em; color: #ffcc00;">
-                            <b>Note:</b> Sorting settings apply to both Server content and Custom IDs. 'Original' preserves Custom List order.
+                            <b>Note:</b> Sorting settings apply to both Server content and Custom IDs. 'Original'
+                            preserves Custom List order.
                         </div>
 
                         <h2 class="sectionTitle">Content Limits</h2>
@@ -377,6 +413,15 @@
                             <input is="emby-input" type="number" id="PreloadCount" name="PreloadCount" />
                             <div class="fieldDescription">Number of slides to preload.</div>
                         </div>
+                        <div class="checkboxContainer checkboxContainer-withDescription">
+                            <label>
+                                <input is="emby-checkbox" type="checkbox" id="ShowPaginationDots"
+                                    name="ShowPaginationDots" />
+                                <span>Show Pagination Dots</span>
+                            </label>
+                            <div class="fieldDescription">Show or hide the pagination dots/counter navigation at the
+                                bottom of the slideshow.</div>
+                        </div>
                         <div class="inputContainer">
                             <label class="inputLabel inputLabelUnfocused" for="MaxPaginationDots">Max Pagination
                                 Dots</label>
@@ -397,7 +442,8 @@
                                     name="IncludeWatchedContent" />
                                 <span>Include Watched Content</span>
                             </label>
-                            <div class="fieldDescription">If enabled, watched content will be included in the random selection results.</div>
+                            <div class="fieldDescription">If enabled, watched content will be included in the random
+                                selection results.</div>
                         </div>
                     </div>
 
@@ -459,7 +505,7 @@
                             'EnableSeasonalContent', 'EnableClientSideSettings', 'SortBy', 'SortOrder',
                             'PreferLocalTrailers', 'ApplyLimitsToCustomIds', 'SeasonalSections',
                             'PreferLocalBackdrops', 'RandomizeThemeVideos', 'RandomizeLocalTrailers',
-                            'IncludeWatchedContent'
+                            'IncludeWatchedContent', 'ShowPaginationDots'
                         ];
 
                         // Manual mapping for MediaBarIsEnabled -> IsEnabled, to avoid conflicts with other plugins
@@ -501,16 +547,16 @@
                             seasonalCheckbox.addEventListener('change', updateSeasonalVisibility);
                             updateSeasonalVisibility();
                         }
-                        
+
                         // Add Season Button
                         var addSeasonBtn = page.querySelector('#addSeasonBtn');
                         if (addSeasonBtn) {
                             // Remove existing listeners to avoid duplicates if re-attached
-                             var newBtn = addSeasonBtn.cloneNode(true);
-                             addSeasonBtn.parentNode.replaceChild(newBtn, addSeasonBtn);
-                             newBtn.addEventListener('click', function() {
-                                 MediaBarEnhancedConfigurationPage.addSeasonalSection(page);
-                             });
+                            var newBtn = addSeasonBtn.cloneNode(true);
+                            addSeasonBtn.parentNode.replaceChild(newBtn, addSeasonBtn);
+                            newBtn.addEventListener('click', function () {
+                                MediaBarEnhancedConfigurationPage.addSeasonalSection(page);
+                            });
                         }
 
                         // Handle Prefer Local Trailers visibility
@@ -545,7 +591,7 @@
                     if (seasonalInput) seasonalInput.value = sectionsJson;
 
                     var config = {};
-                    
+
                     // Manual mapping for MediaBarIsEnabled -> IsEnabled, to avoid conflicts with other plugins
                     var mediaBarEnabledCheckbox = page.querySelector('#MediaBarIsEnabled');
                     if (mediaBarEnabledCheckbox) {
@@ -563,7 +609,7 @@
                         'EnableSeasonalContent', 'EnableClientSideSettings', 'SortBy', 'SortOrder',
                         'PreferLocalTrailers', 'ApplyLimitsToCustomIds', 'SeasonalSections',
                         'PreferLocalBackdrops', 'RandomizeThemeVideos', 'RandomizeLocalTrailers',
-                        'IncludeWatchedContent'
+                        'IncludeWatchedContent', 'ShowPaginationDots'
                     ];
 
                     keys.forEach(function (key) {
@@ -582,16 +628,16 @@
                     });
                 },
 
-                renderSeasonalSections: function(page, sections) {
+                renderSeasonalSections: function (page, sections) {
                     var container = page.querySelector('#seasonalSectionsList');
                     if (!container) return;
                     container.innerHTML = '';
-                    sections.forEach(function(section, index) {
+                    sections.forEach(function (section, index) {
                         MediaBarEnhancedConfigurationPage.createSectionElement(container, section, index + 1);
                     });
                 },
 
-                addSeasonalSection: function(page) {
+                addSeasonalSection: function (page) {
                     var container = page.querySelector('#seasonalSectionsList');
                     if (!container) return;
                     var index = container.children.length + 1;
@@ -603,25 +649,25 @@
                     }, index);
                 },
 
-                createSectionElement: function(container, data, index) {
+                createSectionElement: function (container, data, index) {
                     var div = document.createElement('div');
                     div.className = 'seasonal-section';
                     div.style.cssText = 'background: rgba(0,0,0,0.2); padding: 1em; margin-bottom: 1em; border-radius: 4px; border: 1px solid rgba(255,255,255,0.1);';
-                    
+
                     var days = [];
-                    for(var i=1; i<=31; i++) days.push(i);
+                    for (var i = 1; i <= 31; i++) days.push(i);
                     var months = [
-                        {v:1, n:'Jan'}, {v:2, n:'Feb'}, {v:3, n:'Mar'}, {v:4, n:'Apr'}, 
-                        {v:5, n:'May'}, {v:6, n:'Jun'}, {v:7, n:'Jul'}, {v:8, n:'Aug'}, 
-                        {v:9, n:'Sep'}, {v:10, n:'Oct'}, {v:11, n:'Nov'}, {v:12, n:'Dec'}
+                        { v: 1, n: 'Jan' }, { v: 2, n: 'Feb' }, { v: 3, n: 'Mar' }, { v: 4, n: 'Apr' },
+                        { v: 5, n: 'May' }, { v: 6, n: 'Jun' }, { v: 7, n: 'Jul' }, { v: 8, n: 'Aug' },
+                        { v: 9, n: 'Sep' }, { v: 10, n: 'Oct' }, { v: 11, n: 'Nov' }, { v: 12, n: 'Dec' }
                     ];
 
                     function mkSelect(val, opts, cls) {
                         var h = '<select class="emby-select emby-select-withcolor ' + cls + '" style="width: auto; display: inline-block; margin-right: 5px; -webkit-appearance: menulist; appearance: menulist;">';
-                        opts.forEach(function(o) {
+                        opts.forEach(function (o) {
                             var v = o.v || o;
                             var n = o.n || o;
-                            h += '<option value="'+v+'" ' + (v == val ? 'selected' : '') + '>' + n + '</option>';
+                            h += '<option value="' + v + '" ' + (v == val ? 'selected' : '') + '>' + n + '</option>';
                         });
                         h += '</select>';
                         return h;
@@ -648,11 +694,11 @@
                         '    <label class="inputLabel" style="margin-bottom:0.5em; display:block;">Active Period</label>' +
                         '    <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 0.5em;">' +
                         '        <span>From:</span>' +
-                                 mkSelect(data.StartDay, days, 'start-day') +
-                                 mkSelect(data.StartMonth, months, 'start-month') +
+                        mkSelect(data.StartDay, days, 'start-day') +
+                        mkSelect(data.StartMonth, months, 'start-month') +
                         '        <span style="margin-left: 1em;">To:</span>' +
-                                 mkSelect(data.EndDay, days, 'end-day') +
-                                 mkSelect(data.EndMonth, months, 'end-month') +
+                        mkSelect(data.EndDay, days, 'end-day') +
+                        mkSelect(data.EndMonth, months, 'end-month') +
                         '    </div>' +
                         '    <div class="fieldDescription">Date range (inclusive) when this content is active.</div>' +
                         '</div>' +
@@ -662,19 +708,19 @@
                         '    <div class="fieldDescription">Comma-separated or Newline separated list of Movie/Series/Collection IDs to show during this season.<br>Same options available as for the default media IDs.</div>' +
                         '</div>';
 
-                    div.querySelector('.btn-remove').addEventListener('click', function() {
+                    div.querySelector('.btn-remove').addEventListener('click', function () {
                         div.remove();
                         MediaBarEnhancedConfigurationPage.updateSectionTitles(container);
                     });
 
-                    div.querySelector('.btn-move-up').addEventListener('click', function() {
+                    div.querySelector('.btn-move-up').addEventListener('click', function () {
                         if (div.previousElementSibling) {
                             container.insertBefore(div, div.previousElementSibling);
                             MediaBarEnhancedConfigurationPage.updateSectionTitles(container);
                         }
                     });
 
-                    div.querySelector('.btn-move-down').addEventListener('click', function() {
+                    div.querySelector('.btn-move-down').addEventListener('click', function () {
                         if (div.nextElementSibling) {
                             container.insertBefore(div.nextElementSibling, div);
                             MediaBarEnhancedConfigurationPage.updateSectionTitles(container);
@@ -684,9 +730,9 @@
                     container.appendChild(div);
                 },
 
-                updateSectionTitles: function(container) {
+                updateSectionTitles: function (container) {
                     var sections = container.querySelectorAll('.seasonal-section');
-                    sections.forEach(function(section, index) {
+                    sections.forEach(function (section, index) {
                         var title = section.querySelector('.section-title');
                         if (title) {
                             title.innerText = 'Season list #' + (index + 1);
@@ -694,10 +740,10 @@
                     });
                 },
 
-                getSeasonalSectionsFromUI: function(page) {
+                getSeasonalSectionsFromUI: function (page) {
                     var sections = [];
                     var els = page.querySelectorAll('.seasonal-section');
-                    els.forEach(function(el) {
+                    els.forEach(function (el) {
                         sections.push({
                             Name: el.querySelector('.section-name').value,
                             StartDay: parseInt(el.querySelector('.start-day').value),

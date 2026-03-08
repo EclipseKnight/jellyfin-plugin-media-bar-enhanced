@@ -18,6 +18,7 @@ namespace Jellyfin.Plugin.MediaBarEnhanced.Configuration
         public int PreloadCount { get; set; } = 3;
         public int FadeTransitionDuration { get; set; } = 500;
         public int MaxPaginationDots { get; set; } = 15;
+        public bool ShowPaginationDots { get; set; } = true;
         public bool SlideAnimationEnabled { get; set; } = true;
         public bool EnableVideoBackdrop { get; set; } = true;
         public bool UseSponsorBlock { get; set; } = true;

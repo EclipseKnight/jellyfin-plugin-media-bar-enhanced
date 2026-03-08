@@ -38,6 +38,7 @@ const CONFIG = {
   preloadCount: 3,
   fadeTransitionDuration: 500,
   maxPaginationDots: 15,
+  showPaginationDots: true,
   slideAnimationEnabled: true,
   enableVideoBackdrop: true,
   useSponsorBlock: true,
@@ -2280,6 +2281,8 @@ const SlideCreator = {
 const SlideshowManager = {
 
   createPaginationDots() {
+    if (!CONFIG.showPaginationDots) return;
+
     let dotsContainer = document.querySelector(".dots-container");
     if (!dotsContainer) {
       dotsContainer = document.createElement("div");

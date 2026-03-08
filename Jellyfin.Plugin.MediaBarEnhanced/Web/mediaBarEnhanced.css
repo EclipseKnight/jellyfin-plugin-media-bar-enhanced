@@ -768,7 +768,22 @@
   .button-container {
     top: calc(50% + 25vh);
     left: 50%;
-    transform: translateX(-50%) scale(0.95);
+    transform: translateX(-50%);
+    width: max-content;
+    max-width: 98vw;
+    flex-wrap: nowrap;
+    justify-content: center;
+    gap: 15px;
+  }
+
+  .button-container button {
+    margin: 0 !important;
+    min-width: 0 !important;
+  }
+
+  .button-container .detail-button,
+  .button-container .favorite-button {
+    flex-shrink: 0;
   }
 
   .logo {
@@ -824,10 +839,6 @@
 
     .genre {
       top: calc(50% + 16vh);
-    }
-
-    .button-container {
-      top: calc(50% + 27vh);
     }
   }
 }
