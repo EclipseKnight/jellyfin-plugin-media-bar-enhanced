@@ -749,7 +749,7 @@ const SlideUtils = {
     if (isYoutube && videoId) {
       const ytIframe = this.createElement('iframe', {
         id: 'modal-yt-player',
-        src: `https://www.youtube-nocookie.com/embed/${videoId}?enablejsapi=1&origin=${encodeURIComponent(window.location.origin)}`,
+        src: `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&controls=1&iv_load_policy=3&rel=0&playsinline=1`,
         allow: 'autoplay; encrypted-media',
         style: 'width: 100%; height: 100%; border: none;',
         referrerpolicy: 'strict-origin-when-cross-origin',
@@ -759,20 +759,6 @@ const SlideUtils = {
       contentContainer.appendChild(ytIframe);
       overlay.append(closeButton, contentContainer);
       document.body.appendChild(overlay);
-
-      this.loadYouTubeIframeAPI().then(() => {
-        new YT.Player(ytIframe, {
-          playerVars: {
-            autoplay: 1,
-            controls: 1,
-            iv_load_policy: 3,
-            rel: 0,
-            playsinline: 1,
-            origin: window.location.origin,
-            enablejsapi: 1
-          }
-        });
-      });
     } else {
       const video = this.createElement('video', {
         src: url,
@@ -780,6 +766,7 @@ const SlideUtils = {
         autoplay: true,
         className: 'video-modal-player'
       });
+      video.setAttribute('playsinline', '');
       contentContainer.appendChild(video);
       overlay.append(closeButton, contentContainer);
       document.body.appendChild(overlay);
@@ -836,7 +823,7 @@ const LocalizationUtils = {
       }
     }
 
-    if (window.ApiClient && STATE.jellyfinData?.accessToken) {
+    if (window.ApiClient && STATE.jellyfinData && STATE.jellyfinData.accessToken) {
       try {
         const userId = window.ApiClient.getCurrentUserId();
         if (userId) {
@@ -846,7 +833,7 @@ const LocalizationUtils = {
           });
           if (userResponse.ok) {
             const userData = await userResponse.json();
-            if (userData.Configuration?.AudioLanguagePreference) {
+            if (userData.Configuration && userData.Configuration.AudioLanguagePreference) {
               locale = userData.Configuration.AudioLanguagePreference.toLowerCase();
             }
           }
@@ -856,7 +843,7 @@ const LocalizationUtils = {
       }
     }
 
-    if (!locale && window.ApiClient && STATE.jellyfinData?.accessToken) {
+    if (!locale && window.ApiClient && (STATE.jellyfinData && STATE.jellyfinData.accessToken)) {
       try {
         const configUrl = window.ApiClient.getUrl('System/Configuration');
         const configResponse = await fetch(configUrl, {
@@ -1031,7 +1018,7 @@ const LocalizationUtils = {
    */
   getLocalizedString(key, fallback, ...args) {
     const locale = this.cachedLocale || 'en-us';
-    let translated = this.translations[locale]?.[key] || fallback;
+    let translated = (this.translations[locale] && this.translations[locale][key]) || fallback;
 
     if (args.length > 0) {
       for (let i = 0; i < args.length; i++) {
@@ -1776,9 +1763,12 @@ const SlideCreator = {
       }
 
       const isLowPower = isLowPowerDevice();
+      const isIOSApp = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+      const limitVideos = isLowPower || isIOSApp;
       const itemIndex = STATE.slideshow.itemIds ? STATE.slideshow.itemIds.indexOf(itemId) : -1;
       const isActiveSlide = itemIndex !== -1 && itemIndex === STATE.slideshow.currentSlideIndex;
-      const shouldCreateVideo = !isLowPower || isActiveSlide;
+      // Limit YouTube iframe bulk creation on low power devices OR iOS (which kills the WebProcess on OOM)
+      const shouldCreateVideo = !limitVideos || isActiveSlide;
 
       if (isYoutube && videoId && shouldCreateVideo) {
         isVideo = true;
@@ -1946,6 +1936,7 @@ const SlideCreator = {
         };
 
         videoAttributes.muted = "";
+        videoAttributes.playsinline = "";
 
         videoBackdrop = SlideUtils.createElement("video", videoAttributes);
         videoBackdrop.volume = 0.4;
@@ -2804,7 +2795,7 @@ const SlideshowManager = {
 
     if (currentItemId) {
       const currentSlide = document.querySelector(`.slide[data-item-id="${currentItemId}"]`);
-      const video = currentSlide?.querySelector('video');
+      const video = currentSlide ? currentSlide.querySelector('video') : null;
 
       if (video) {
         video.muted = STATE.slideshow.isMuted;
@@ -2964,7 +2955,7 @@ const SlideshowManager = {
     if (!currentSlide) return;
 
     // YouTube player: just resume, don't reload
-    const ytPlayer = STATE.slideshow.videoPlayers?.[currentItemId];
+    const ytPlayer = (STATE.slideshow.videoPlayers && STATE.slideshow.videoPlayers[currentItemId]) ? STATE.slideshow.videoPlayers[currentItemId] : undefined;
     if (ytPlayer && typeof ytPlayer.playVideo === 'function') {
       if (STATE.slideshow.isMuted) {
         if (typeof ytPlayer.mute === 'function') ytPlayer.mute();

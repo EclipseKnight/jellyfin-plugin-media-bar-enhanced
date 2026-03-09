@@ -354,13 +354,13 @@
   width: 100%;
   height: 100%;
   mask-image: linear-gradient(to top,
-      #fff0 2%,
-      rgb(0 0 0 / 0.5) 6%,
+      rgba(255, 255, 255, 0) 2%,
+      rgba(0, 0, 0, 0.5) 6%,
       #000000 8%);
   -webkit-mask-image: linear-gradient(to top,
-      #fff0 2%,
-      rgb(0 0 0 / 0.5) 6%,
-      #000000 8%);
+    rgba(255, 255, 255, 0) 2%,
+    rgba(0, 0, 0, 0.5) 6%,
+    #000000 8%);
 }
 
 .backdrop-container.full-width-video {
@@ -384,13 +384,13 @@
   border-radius: 5px;
   z-index: 3;
   mask-image: linear-gradient(to top,
-      #fff0 2%,
-      rgb(0 0 0 / 0.5) 6%,
-      #000000 8%);
+    rgba(255, 255, 255, 0) 2%,
+    rgba(0, 0, 0, 0.5) 6%,
+    #000000 8%);
   -webkit-mask-image: linear-gradient(to top,
-      #fff0 2%,
-      rgb(0 0 0 / 0.5) 6%,
-      #000000 8%);
+    rgba(255, 255, 255, 0) 2%,
+    rgba(0, 0, 0, 0.5) 6%,
+    #000000 8%);
 }
 
 .backdrop-overlay {
@@ -403,13 +403,13 @@
   border-radius: 5px;
   z-index: 4;
   mask-image: linear-gradient(to top,
-      #fff0 2%,
-      rgb(0 0 0 / 0.5) 4%,
-      #000000 6%);
+    rgba(255, 255, 255, 0) 2%,
+    rgba(0, 0, 0, 0.5) 4%,
+    #000000 6%);
   -webkit-mask-image: linear-gradient(to top,
-      #fff0 2%,
-      rgb(0 0 0 / 0.5) 4%,
-      #000000 6%);
+    rgba(255, 255, 255, 0) 2%,
+    rgba(0, 0, 0, 0.5) 4%,
+    #000000 6%);
 }
 
 .gradient-overlay {
@@ -424,13 +424,13 @@
       rgba(29, 29, 29, 0) 100%);
   z-index: 4;
   mask-image: linear-gradient(to top,
-      #fff0 2%,
-      rgb(0 0 0 / 0.5) 4%,
-      #000000 6%);
+    rgba(255, 255, 255, 0) 2%,
+    rgba(0, 0, 0, 0.5) 4%,
+    #000000 6%);
   -webkit-mask-image: linear-gradient(to top,
-      #fff0 2%,
-      rgb(0 0 0 / 0.5) 4%,
-      #000000 6%);
+    rgba(255, 255, 255, 0) 2%,
+    rgba(0, 0, 0, 0.5) 4%,
+    #000000 6%);
 }
 
 .gradient-overlay.full-width-video {
@@ -525,6 +525,8 @@
   font-family: "Archivo Narrow", sans-serif;
   font-size: 18px;
   white-space: nowrap;
+  background-color: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
   cursor: pointer;
   transition: all 0.3s ease;
   font-weight: 700;
@@ -535,6 +537,7 @@
 
 .detail-button {
   font-size: 18px;
+  background-color: rgb(255, 255, 255);
   color: rgb(0, 0, 0);
   border-radius: 50%;
   height: 50px;
@@ -547,6 +550,7 @@
 
 .favorite-button {
   font-size: 18px;
+  background-color: rgb(255, 255, 255);
   color: red;
   border-radius: 50%;
   height: 50px;
@@ -662,7 +666,7 @@
   display: flex;
   align-items: center;
   border-radius: 5px;
-  background: rgb(255 255 255 / 0.8);
+  background: rgba(255, 255, 255, 0.8);
   color: #000;
   border: none;
   font-weight: 600;
@@ -712,13 +716,13 @@
     object-position: center 20%;
     z-index: 3;
     mask-image: linear-gradient(to top,
-        #fff0 2%,
-        rgb(0 0 0 / 0.5) 6%,
-        #000000 8%);
+      rgba(255, 255, 255, 0) 2%,
+      rgba(0, 0, 0, 0.5) 6%,
+      #000000 8%);
     -webkit-mask-image: linear-gradient(to top,
-        #fff0 2%,
-        rgb(0 0 0 / 0.5) 6%,
-        #000000 8%);
+      rgba(255, 255, 255, 0) 2%,
+      rgba(0, 0, 0, 0.5) 6%,
+      #000000 8%);
   }
 
   .gradient-overlay {
@@ -727,17 +731,17 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgb(0 0 0 / 0.25);
+    background: rgba(0, 0, 0, 0.25);
     z-index: 4;
     pointer-events: none;
     mask-image: linear-gradient(to top,
-        #fff0 2%,
-        rgb(0 0 0 / 0.5) 6%,
-        #000000 8%);
+      rgba(255, 255, 255, 0) 2%,
+      rgba(0, 0, 0, 0.5) 6%,
+      #000000 8%);
     -webkit-mask-image: linear-gradient(to top,
-        #fff0 2%,
-        rgb(0 0 0 / 0.5) 6%,
-        #000000 8%);
+      rgba(255, 255, 255, 0) 2%,
+      rgba(0, 0, 0, 0.5) 6%,
+      #000000 8%);
   }
 
   .dots-container {
@@ -1008,7 +1012,7 @@
   margin: 0;
 }
 
-.layout-tv .backdrop-container{
+.layout-tv .backdrop-container {
   top: -5%;
 }
 
@@ -1016,11 +1020,11 @@
   .layout-tv .backdrop.animate {
     animation: none !important;
   }
-  
+
   .layout-tv .logo.animate {
     animation: none !important;
   }
-  
+
   .layout-tv .slide-counter,
   .layout-tv .dots-container {
     backdrop-filter: none;
