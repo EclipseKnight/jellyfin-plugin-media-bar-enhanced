@@ -2275,6 +2275,52 @@ const SlideCreator = {
 };
 
 /**
+ * Prevents an oversized dark block behind the Continue Watching row by scoping
+ * the tinted surface to the row scroller only.
+ */
+const normalizeContinueWatchingRowSurface = () => {
+  const homeTab = document.querySelector("#homeTab");
+  if (!homeTab) {
+    return;
+  }
+
+  const section = homeTab.querySelector(".verticalSection.ContinueWatching");
+  if (!section) {
+    return;
+  }
+
+  const rootStyle = window.getComputedStyle(document.documentElement);
+  const headerColor = (rootStyle.getPropertyValue("--headerColor") || "rgba(30, 40, 54, 0.8)").trim();
+
+  section.style.background = "transparent";
+  section.style.backgroundColor = "transparent";
+  section.style.backgroundImage = "none";
+  section.style.boxShadow = "none";
+  section.style.filter = "none";
+  section.style.backdropFilter = "none";
+  section.style.webkitBackdropFilter = "none";
+
+  const transparentTargets = section.querySelectorAll(".sectionTitleContainer, .sectionTitleContainer-cards, .emby-scrollbuttons, h2.sectionTitle.sectionTitle-cards, .itemsContainer");
+  transparentTargets.forEach((node) => {
+    node.style.background = "transparent";
+    node.style.backgroundColor = "transparent";
+    node.style.backgroundImage = "none";
+    node.style.boxShadow = "none";
+  });
+
+  const scroller = section.querySelector(".padded-top-focusscale.padded-bottom-focusscale.scroller") || section.querySelector(".scroller");
+  if (!scroller) {
+    return;
+  }
+
+  scroller.style.background = headerColor;
+  scroller.style.backgroundColor = headerColor;
+  scroller.style.backgroundImage = "none";
+  scroller.style.boxShadow = "none";
+  scroller.style.borderRadius = "var(--largeRadius)";
+};
+
+/**
  * Manages slideshow functionality
  */
 const SlideshowManager = {
@@ -2546,6 +2592,8 @@ const SlideshowManager = {
       }
 
       this.pruneSlideCache();
+      normalizeContinueWatchingRowSurface();
+      setTimeout(normalizeContinueWatchingRowSurface, 120);
     } catch (error) {
       console.error("🎬 Media Bar:", "Error updating current slide:", error);
     } finally {
@@ -3725,6 +3773,7 @@ const slidesInit = async () => {
   }
 
   STATE.slideshow.hasInitialized = true;
+  normalizeContinueWatchingRowSurface();
 
   /**
    * Initialize IntersectionObserver for lazy loading images
