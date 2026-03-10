@@ -6,15 +6,15 @@
     "overview": "Transforms your Jellyfin home screen with an immersive, fully configurable media slideshow featuring video backdrops.",
     "owner": "CodeDevMLH",
     "category": "General",
-    "imageUrl": "https://raw.githubusercontent.com/CodeDevMLH/jellyfin-plugin-media-bar-enhanced/refs/heads/main/logo.png",
+    "imageUrl": "https://raw.githubusercontent.com/EclipseKnight/jellyfin-plugin-media-bar-enhanced/refs/heads/main/logo.png",
     "versions": [
       {
-        "version": "1.7.0.0",
-        "changelog": "- Switched to YouTube no-cookie host and referrer policy for iframe security\n- fix playback issues on iOS/MacOS \n- Disable animations and backdrop filters for TV layout\n- removed list.txt functionality to clean up, use the web ui instead\n- Enhance logging with contextual messages, in order to be able to clearly assign logs to this plugin",
+        "version": "1.7.1.0",
+        "changelog": "- fix(home): normalize Continue Watching row background after slide updates\n- maintenance: forked release maintained by EclipseKnight",
         "targetAbi": "10.11.0.0",
-        "sourceUrl": "https://github.com/CodeDevMLH/jellyfin-plugin-media-bar-enhanced/releases/download/v1.7.0.0/Jellyfin.Plugin.MediaBarEnhanced.zip",
-        "checksum": "8f5c6537ce427db6d0bca8df383e9ceb",
-        "timestamp": "2026-03-06T03:35:31Z"
+        "sourceUrl": "https://github.com/EclipseKnight/jellyfin-plugin-media-bar-enhanced/releases/download/v1.7.1.0/Jellyfin.Plugin.MediaBarEnhanced.zip",
+        "checksum": "f63f8dff35524b5ebc435264fed9760d",
+        "timestamp": "2026-03-10T17:33:18Z"
       },
       {
         "version": "1.6.6.0",
