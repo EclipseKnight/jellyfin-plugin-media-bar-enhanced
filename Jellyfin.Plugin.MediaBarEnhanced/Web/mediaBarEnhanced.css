@@ -171,7 +171,7 @@
 #slides-container {
   position: relative;
   width: 100vw;
-  height: 90%;
+  height: 100%;
   overflow: hidden;
   margin: 0 auto;
   pointer-events: auto;
